@@ -1,0 +1,204 @@
+﻿@using Rdio.Utility
+
+@{
+    ViewBag.Title = "EditTemplate";
+    Layout = "~/Views/Shared/_MasterAdmin.cshtml";
+}
+@model Rdio.ViewModel.ContentManager.TemplateVM
+
+<div>
+    <h2>@Model.name</h2>
+    <hr />
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h3 class="panel-title">ثبت/ ویرایش قالب دریافت محتوا</h3>
+    </div>
+    <div class="panel-body">
+        <form class="form-horizontal">
+            <input type="hidden" name="_id" value="@Model._id" />
+            <input type="hidden" name="rssid" value="@Model.rssid" />
+            <div class="form-group">
+                <label for="inputEmail3" class="col-sm-2 control-label">عنوان</label>
+                <div class="col-sm-10">
+                    <input id="name" class="form-control input-lg" type="text" placeholder="عنوان" value="@Model.name">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputEmail3" class="col-sm-2 control-label">آدرس نمونه</label>
+                <div class="col-sm-10">
+                    <input id="sampleurl" class="form-control input-lg" type="text" placeholder="http://www.farsnews.com/13950921001506" value="@Model.sampleurl">
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="inputEmail3" class="col-sm-2 control-label">نوع محتوا</label>
+                <div class="col-sm-10">
+                    <select class="form-control input-lg" name="type" id="type">
+                        @foreach (var item in Enum.GetValues(typeof(Rdio.Util.Configuration.ContentType)))
+                        {
+                            <option @Html.isSelected(item.ToString() == Model.type) value='@item'>@Rdio.Util.Common.GetEnumDescription((Rdio.Util.Configuration.ContentType)item)</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            <hr />
+            <div id="TemplateStructures">
+                <div class="contenttemplate" id="contenttemplate_News" style="display: block;">
+                    <h4>خبر</h4>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">تیتر</label>
+                        <div class="col-sm-7">
+                            <input id="titr" data-field="titr" class="form-control input-lg" type="text" placeholder="تیتر" value="">
+                        </div>
+                        <div class="col-sm-3">
+                            <select class="form-control input-lg" name="structure_type" id="structure_type">
+                                <option value='innerhtml'>محتوای داخل Html</option>
+                                <option value='src'>آدرس فایل</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">روتیتر</label>
+                        <div class="col-sm-7">
+                            <input id="rotitr" data-field="rotitr" class="form-control input-lg" type="text" placeholder="روتیتر" value="">
+                        </div>
+                        <div class="col-sm-3">
+                            <select class="form-control input-lg" name="structure_type" id="structure_type">
+                                <option value='innerhtml'>محتوای داخل Html</option>
+                                <option value='src'>آدرس فایل</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">لید</label>
+                        <div class="col-sm-7">
+                            <input id="lead" data-field="lead" class="form-control input-lg" type="text" placeholder="لید" value="">
+                        </div>
+                        <div class="col-sm-3">
+                            <select class="form-control input-lg" name="structure_type" id="structure_type">
+                                <option value='innerhtml'>محتوای داخل Html</option>
+                                <option value='src'>آدرس فایل</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">متن</label>
+                        <div class="col-sm-7">
+                            <input id="content" data-field="content" class="form-control input-lg" type="text" placeholder="متن" value="">
+                        </div>
+                        <div class="col-sm-3">
+                            <select class="form-control input-lg" name="structure_type" id="structure_type">
+                                <option value='innerhtml'>محتوای داخل Html</option>
+                                <option value='src'>آدرس فایل</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">عکس</label>
+                        <div class="col-sm-7">
+                            <input id="image" data-field="image" class="form-control input-lg" type="text" placeholder="عکس" value="">
+                        </div>
+                        <div class="col-sm-3">
+                            <select class="form-control input-lg" name="structure_type" id="structure_type">
+                                <option value='innerhtml'>محتوای داخل Html</option>
+                                <option value='src'>آدرس فایل</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="col-sm-2 control-label">کلیدواژه</label>
+                        <div class="col-sm-7">
+                            <input id="tags" data-field="tags" class="form-control input-lg" type="text" placeholder="کلیدواژه" value="">
+                        </div>
+                        <div class="col-sm-3">
+                            <select class="form-control input-lg" name="structure_type" id="structure_type">
+                                <option value='innerhtml'>محتوای داخل Html</option>
+                                <option value='src'>آدرس فایل</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="contenttemplate" id="contenttemplate_Shopping">
+                    <h4>فروشگاه</h4>
+                    @{ var content = new Rdio.Models.Content.Content();}
+                    @foreach (var item in content.GetType().GetProperties())
+                    {
+                        <div class="form-group">
+                            <label for="inputEmail3" class="col-sm-2 control-label">@item.Name</label>
+                            <div class="col-sm-10">
+                                <input id="@item" class="form-control input-lg" type="text" placeholder="عنوان" value="">
+                            </div>
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <button type="button" id="edittemplatesubmit" class="btn btn-success pull-left">ثبت</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="modal fade" id="showsampleurlmodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">انتخاب ساختار محتوا</h4>
+            </div>
+            <div class="modal-body">
+                <iframe id="sampleurliframe"></iframe>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-success">ثبت</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">خروج</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="datacontainer"></div>
+<script id="datamodel" type="text/x-handlebars-template">
+    <div class="table-responsive">
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>عنوان</th>
+                    <th>آدرس</th>
+                    <th>جزئیات</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each this.Data}}
+                <tr>
+                    <td>{{@@key}}</td>
+                    <td>{{title}}</td>
+                    <td>{{url}}</td>
+                    <td>
+                        <a href="/ContentManager/RssManage?id={{_id}}&siteid={{siteid}}"><i class="fa fa-pencil fa-lg" aria-hidden="true" title="ویرایش"></i></a>
+                        <a href="/BaseContent/Manage?rssid={{_id}}"><i class="fa fa-list fa-lg" aria-hidden="true" title="لیست اخبار"></i></a>
+
+                    </td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+        <hr />
+        <div class="btn-group pull-left" role="group" aria-label="...">
+            <button data-pagenumber="{{this.PrevPage}}" class="paginatopnbtn btn btn-default {{#ifCond this.CurrentPage 1}}disabled{{/ifCond}}" title="{{this.PrevPage}}"><span class="fa fa-arrow-right"></span></button>
+            <button type="button" class="btn btn-default">{{this.CurrentPage}}</button>
+            <button data-pagenumber="{{this.NextPage}}" class="paginatopnbtn btn btn-default" title="{{this.NextPage}}"><span class="fa fa-arrow-left"></span></button>
+        </div>
+    </div>
+</script>
+
+<script>
+    $(document).ready(function () {
+        Rdio.ContentManager.Event.TemplateManage();
+        Rdio.ContentManager.Event.EditTemplate();
+    });
+</script>
