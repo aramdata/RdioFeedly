@@ -245,6 +245,11 @@ Rdio = {
     },
 
     'Admin': {
+        'Event': {
+            'M': function () {
+
+            }
+        }
     }
 };
 $(document).ready(function () {
