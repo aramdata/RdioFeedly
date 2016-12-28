@@ -488,6 +488,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Api\BaseContentController.cs" />
+    <Compile Include="Api\ContentController.cs" />
     <Compile Include="Api\ContentManagerController.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
@@ -537,6 +538,8 @@
     <Compile Include="ViewModel\ContentManager\RssVM.cs" />
     <Compile Include="ViewModel\ContentManager\SiteVM.cs" />
     <Compile Include="ViewModel\ContentManager\TemplateVM.cs" />
+    <Compile Include="ViewModel\Content\ContentManageServiceResult.cs" />
+    <Compile Include="ViewModel\Content\SimpleContentManageVM.cs" />
     <Compile Include="ViewModel\Pagination.cs" />
     <Compile Include="ViewModel\ServiceResult.cs" />
   </ItemGroup>
@@ -619,6 +622,7 @@
     <Content Include="Views\ContentManager\EditTemplate.cshtml" />
     <Content Include="Views\BaseContent\m.cshtml" />
     <Content Include="Views\Content\item.cshtml" />
+    <Content Include="Views\Content\Manage.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

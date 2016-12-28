@@ -46,6 +46,8 @@ namespace Rdio.Repository
             try
             {
                 var _id = ObjectId.GenerateNewId().ToString();
+                if (model.tags == null)
+                    model.tags = new List<string>();
                 var res = await NoSql.Instance.RunCommandAsync<BsonDocument>("{update:'content',updates:[{q:{_id:ObjectId('" + _id + "')},u:{$set:{_id:ObjectId('" + _id + "'),userid:'" + model.userid + "',contenttype:"+model.contenttype+ ",rssid:'"+model.rssid+ "',basecontentid:'"+model.basecontentid+ "',titr:'" + model.titr + "',rotitr:'"+model.rotitr + "',lead:'"+model.lead+ "',content:'"+model.content + "',image:'"+model.image + "',tags:"+model.tags.toJSON()+",createdateticks:" + DateTime.Now.Ticks + ",url:'" + model.url + "'}},upsert:true}]}");
 
                 //var collection = NoSql.Instance.GetCollection<BsonDocument>("content");

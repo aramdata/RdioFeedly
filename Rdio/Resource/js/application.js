@@ -13,7 +13,8 @@ Rdio = {
         },
         'Pagination': {
             'Siteid': '',
-            'BaseContentSearchModel':'',
+            'BaseContentSearchModel': '',
+            'ContentSearchModel': '',
             'Event': function (type, page) {
                 $('body').on('click', '.paginatopnbtn', function () {
                     var pagenumber = $(this).data('pagenumber');
@@ -37,6 +38,17 @@ Rdio = {
                     model.tags = $('[name="tags"]').val();
                     model.categories = $('[name="categories"]').val();
                     Rdio.Tools.Pagination.BaseContentSearchModel = model;
+                    Rdio.Tools.Pagination.GetPagination(type, page);
+                }
+
+                if (type == 'ContentManage') {
+                    var model = Rdio.Content.ContentSearchModel;
+                    model.page = page;
+                    model.rssid = $('[name="rssid"]').val();
+                    model.siteid = $('[name="siteid"]').val();
+                    model.tags = $('[name="tags"]').val();
+                    model.categories = $('[name="categories"]').val();
+                    Rdio.Tools.Pagination.ContentSearchModel = model;
                     Rdio.Tools.Pagination.GetPagination(type, page);
                 }
             },
@@ -106,6 +118,27 @@ Rdio = {
                     });
                 }
 
+                if (type == 'ContentManage') {
+                    loader($('#datacontainer'));
+                    Rdio.Tools.Pagination.ContentSearchModel.page = page;
+                    $.ajax({
+                        method: "POST",
+                        url: "/api/Content/Manage",
+                        data: Rdio.Tools.Pagination.ContentSearchModel
+                    }).done(function (result) {
+                        disloader($('#datacontainer'));
+
+                        if (result.ServiceResultStatus == 0) {
+                            var source = $("#datamodel").html();
+                            var template = Handlebars.compile(source);
+                            var html = template(result);
+                            $("#datacontainer").html(html);
+                        }
+                        if (result.ServiceResultStatus == 1) {
+                            alert(result.ServiceResultMassage);
+                        }
+                    });
+                }
             }
         }
     },
@@ -243,7 +276,20 @@ Rdio = {
             }
         }
     },
+    'Content': {
+        'ContentSearchModel': { 'page': 1, 'rssid': '', 'tags': '', 'categories': '', 'siteid': '' },
 
+        'Event': {
+            'Manage': function () {
+
+                $('body').on('click', '#basecontentsearchsubmit', function () {
+                    Rdio.Tools.Pagination.Event('BaseContentManage', 1);
+                });
+
+                Rdio.Tools.Pagination.Event('ContentManage', 1);
+            }
+        }
+    },
     'Admin': {
         'Event': {
             'M': function () {
