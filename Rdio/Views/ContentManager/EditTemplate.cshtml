@@ -5,8 +5,9 @@
     Layout = "~/Views/Shared/_MasterAdmin.cshtml";
 }
 @model Rdio.ViewModel.ContentManager.TemplateVM
-
+@{ var structure = new Rdio.Models.Crawl.CrawlStructur();}
 <div>
+    <h2>@Model.sitename</h2>
     <h2>@Model.name</h2>
     <hr />
 </div>
@@ -18,7 +19,7 @@
     <div class="panel-body">
         <form class="form-horizontal">
             <input type="hidden" name="_id" value="@Model._id" />
-            <input type="hidden" name="rssid" value="@Model.rssid" />
+            <input type="hidden" name="siteid" value="@Model.siteid" />
             <div class="form-group">
                 <label for="inputEmail3" class="col-sm-2 control-label">عنوان</label>
                 <div class="col-sm-10">
@@ -46,78 +47,12 @@
             <div id="TemplateStructures">
                 <div class="contenttemplate" id="contenttemplate_News" style="display: block;">
                     <h4>خبر</h4>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">تیتر</label>
-                        <div class="col-sm-7">
-                            <input id="titr" data-field="titr" class="form-control input-lg" type="text" placeholder="تیتر" value="">
-                        </div>
-                        <div class="col-sm-3">
-                            <select class="form-control input-lg" name="structure_type" id="structure_type">
-                                <option value='innerhtml'>محتوای داخل Html</option>
-                                <option value='src'>آدرس فایل</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">روتیتر</label>
-                        <div class="col-sm-7">
-                            <input id="rotitr" data-field="rotitr" class="form-control input-lg" type="text" placeholder="روتیتر" value="">
-                        </div>
-                        <div class="col-sm-3">
-                            <select class="form-control input-lg" name="structure_type" id="structure_type">
-                                <option value='innerhtml'>محتوای داخل Html</option>
-                                <option value='src'>آدرس فایل</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">لید</label>
-                        <div class="col-sm-7">
-                            <input id="lead" data-field="lead" class="form-control input-lg" type="text" placeholder="لید" value="">
-                        </div>
-                        <div class="col-sm-3">
-                            <select class="form-control input-lg" name="structure_type" id="structure_type">
-                                <option value='innerhtml'>محتوای داخل Html</option>
-                                <option value='src'>آدرس فایل</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">متن</label>
-                        <div class="col-sm-7">
-                            <input id="content" data-field="content" class="form-control input-lg" type="text" placeholder="متن" value="">
-                        </div>
-                        <div class="col-sm-3">
-                            <select class="form-control input-lg" name="structure_type" id="structure_type">
-                                <option value='innerhtml'>محتوای داخل Html</option>
-                                <option value='src'>آدرس فایل</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">عکس</label>
-                        <div class="col-sm-7">
-                            <input id="image" data-field="image" class="form-control input-lg" type="text" placeholder="عکس" value="">
-                        </div>
-                        <div class="col-sm-3">
-                            <select class="form-control input-lg" name="structure_type" id="structure_type">
-                                <option value='innerhtml'>محتوای داخل Html</option>
-                                <option value='src'>آدرس فایل</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-sm-2 control-label">کلیدواژه</label>
-                        <div class="col-sm-7">
-                            <input id="tags" data-field="tags" class="form-control input-lg" type="text" placeholder="کلیدواژه" value="">
-                        </div>
-                        <div class="col-sm-3">
-                            <select class="form-control input-lg" name="structure_type" id="structure_type">
-                                <option value='innerhtml'>محتوای داخل Html</option>
-                                <option value='src'>آدرس فایل</option>
-                            </select>
-                        </div>
-                    </div>
+                    @Html.Partial("_EditTemplateItem", new Tuple<Rdio.ViewModel.ContentManager.TemplateVM, string, string>(Model, "titr", "تیتر"))
+                    @Html.Partial("_EditTemplateItem", new Tuple<Rdio.ViewModel.ContentManager.TemplateVM, string, string>(Model, "rotitr", "روتیتر"))
+                    @Html.Partial("_EditTemplateItem", new Tuple<Rdio.ViewModel.ContentManager.TemplateVM, string, string>(Model, "lead", "لید"))
+                    @Html.Partial("_EditTemplateItem", new Tuple<Rdio.ViewModel.ContentManager.TemplateVM, string, string>(Model, "content", "متن"))
+                    @Html.Partial("_EditTemplateItem", new Tuple<Rdio.ViewModel.ContentManager.TemplateVM, string, string>(Model, "image", "عکس"))
+                    @Html.Partial("_EditTemplateItem", new Tuple<Rdio.ViewModel.ContentManager.TemplateVM, string, string>(Model, "tags", "کلیدواژه"))
                 </div>
                 <div class="contenttemplate" id="contenttemplate_Shopping">
                     <h4>فروشگاه</h4>

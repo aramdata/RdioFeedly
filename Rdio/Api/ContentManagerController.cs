@@ -162,7 +162,7 @@ namespace Rdio.Api
         {
             try
             {
-                var res = await ContentManagerRepository.EditTemplate(model.rssid,new Models.Crawl.CrawlTemplate()
+                var res = await ContentManagerRepository.EditTemplate(model.siteid,new Models.Crawl.CrawlTemplate()
                 {
                     _id = model._id,
                     name = model.name,

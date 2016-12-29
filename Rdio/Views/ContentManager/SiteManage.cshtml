@@ -27,44 +27,7 @@
                     <td class="date">{{ticksToPDate createdateticks}}</td>
                     <td>
                         <a href="/ContentManager/RssManage?siteid={{_id}}"><i class="fa fa-pencil fa-lg" aria-hidden="true" title="ویرایش"></i></a>
-                        @*<span style="cursor:pointer;" data-toggle="modal" data-target="#orderproductsmodal"><i class="fa fa-list-alt fa-lg" aria-hidden="true"></i></span>
-                        <div style="display:none">
-                            <div class="alert alert-warning" role="alert">اگر یک فایل بیش از چند بار خطا داد، فایل اصلی مشکل دارد.</div>
-                            <div class="table-responsive">
-                                <table class="table table-striped">
-                                    <thead>
-                                        <tr>
-                                            <th>#</th>
-                                            <th>پیغام</th>
-                                            <th>جزئیات</th>
-                                            <th>وضعیت</th>
-                                            <th>تاریخ</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {{#each this.logs}}
-                                        <tr>
-                                            <td>{{@@key}}</td>
-                                            <td>
-                                                {{#ifCond logmessage 0}} <span>پردازش با موفقیت انجام شد</span> {{/ifCond}}
-                                                {{#ifCond logmessage 1}} <span>در پردازش خطایی رخ داده است</span> {{/ifCond}}
-                                                {{#ifCond logmessage 2}} <span>فایل مجددا به صف پردازش منتقل شد</span> {{/ifCond}}
-                                                {{#ifCond logmessage 3}} <span>آغاز پردازش فایل</span> {{/ifCond}}
-                                            </td>
-                                            <td>{{exceptionmessage}}</td>
-                                            <td>
-                                                {{#ifCond status 0}} <span class="label label-default">در صف پردازش</span> {{/ifCond}}
-                                                {{#ifCond status 1}} <span class="label label-info">در حال پردازش</span> {{/ifCond}}
-                                                {{#ifCond status 2}} <span class="label label-success">پردازش شده</span> {{/ifCond}}
-                                                {{#ifCond status 3}} <span class="label label-danger">پردازش با خطا</span> {{/ifCond}}
-                                            </td>
-                                            <td class="date">{{ticksToPDate dateticks}}</td>
-                                        </tr>
-                                        {{/each}}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>*@
+                        <a href="/ContentManager/EditTemplate?siteid={{_id}}"><i class="fa fa-book fa-lg" aria-hidden="true" title="مدیریت قالب محتوا"></i></a>
 
                     </td>
                 </tr>

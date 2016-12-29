@@ -21,8 +21,8 @@ namespace Rdio
             app.UseHangfireDashboard();
             ConfigureAuth(app);
 
-            //var rssService = new Service.RssService();
-            //RecurringJob.AddOrUpdate(() => rssService.RssFetcherManager(), Cron.MinuteInterval(1));
+            var rssService = new Service.RssService();
+            RecurringJob.AddOrUpdate(() => rssService.RssFetcherManager(), Cron.MinuteInterval(1));
 
             var crawlService=new Service.CrawlerService();
             RecurringJob.AddOrUpdate(() => crawlService.CrawlManager(), Cron.MinuteInterval(1));

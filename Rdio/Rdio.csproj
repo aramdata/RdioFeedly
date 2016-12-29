@@ -623,6 +623,7 @@
     <Content Include="Views\BaseContent\m.cshtml" />
     <Content Include="Views\Content\item.cshtml" />
     <Content Include="Views\Content\Manage.cshtml" />
+    <Content Include="Views\ContentManager\_EditTemplateItem.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

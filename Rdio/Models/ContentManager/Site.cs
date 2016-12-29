@@ -17,6 +17,8 @@ namespace Rdio.Models.ContentManager
         public string title { get; set; }
         public string url { get; set; }
         public long createdateticks { get; set; }
+        public List<Models.Crawl.CrawlTemplate> template { get; set; }
+
 
     }
 }

@@ -8,10 +8,11 @@ namespace Rdio.ViewModel.ContentManager
     public class TemplateVM
     {
         public string _id { get; set; }
-        public string rssid { get; set; }
+        public string siteid { get; set; }
+        public string sitename { get; set; }
         public string sampleurl { get; set; }
         public string name { get; set; }
         public string type { get; set; }
-        public List<Tuple<string,string>> structures { get; set; }
+        public List<Models.Crawl.CrawlStructur> structure { get; set; }
     }
 }

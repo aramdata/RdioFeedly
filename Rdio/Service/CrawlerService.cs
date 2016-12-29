@@ -66,50 +66,56 @@ namespace Rdio.Service
                 var document = parser.Parse(htmlContent);
 
                 var rssModel = await ContentManagerRepository.RssInfo(model.rssid);
-                
+                var SiteModel = await ContentManagerRepository.SiteInfo(rssModel.siteid);
+
                 //var template = Util.Common.fromJSON<Models.Crawl.CrawlTemplate>(System.IO.File.ReadAllText(HttpContext.Current.Server.MapPath("~/Models/simplecrawltemplate.json")));
-                var template = Util.Common.fromJSON<Models.Crawl.CrawlTemplate>(System.IO.File.ReadAllText(HostingEnvironment.MapPath("~/Models/simplecrawltemplate.json")));
+                //var template = Util.Common.fromJSON<Models.Crawl.CrawlTemplate>(System.IO.File.ReadAllText(HostingEnvironment.MapPath("~/Models/simplecrawltemplate.json")));
+                var template = SiteModel.template.FirstOrDefault();
 
-
-                var content = new Models.Content.NewsContent();
-                content.rssid = model.rssid;
-                content.userid = model.userid;
-                content.contenttype = (int)Util.Configuration.ContentType.News;
-                content.basecontentid = model._id;
-                content.url = model.url;
-
-                foreach (var item in template.structure)
+                if(template!=null)
                 {
-                    var element = document.QuerySelector(item.query);
-                    var elementcontent = "";
-                    if (element != null && !string.IsNullOrWhiteSpace(item.query))
+                    var content = new Models.Content.NewsContent();
+                    content.rssid = model.rssid;
+                    content.userid = model.userid;
+                    content.contenttype = (int)Util.Configuration.ContentType.News;
+                    content.basecontentid = model._id;
+                    content.url = model.url;
+
+                    foreach (var item in template.structure)
                     {
-                        switch (item.type)
+                        var element = document.QuerySelector(item.query);
+                        var elementcontent = "";
+                        if (element != null && !string.IsNullOrWhiteSpace(item.query))
                         {
-                            case "innerhtml":
-                                elementcontent = element.InnerHtml;
-                                break;
-                            case "src":
-                                elementcontent = element.GetAttribute(item.type);
-                                break;
-                            default:
-                                break;
-                        }
-                        try
-                        {
-                            content.GetType().GetProperty(item.field).SetValue(content, elementcontent, null);
-                        }
-                        catch
-                        {
+                            switch (item.type)
+                            {
+                                case "innerhtml":
+                                    elementcontent = element.InnerHtml;
+                                    break;
+                                case "src":
+                                    elementcontent = element.GetAttribute(item.type);
+                                    break;
+                                default:
+                                    break;
+                            }
+                            try
+                            {
+                                content.GetType().GetProperty(item.field).SetValue(content, elementcontent, null);
+                            }
+                            catch
+                            {
+                            }
                         }
                     }
+
+                    var result = await ContentRepository.AddContent(content);
+
+                    if (result)
+                        await baseContentRepository.ChangeIsCrawled(model);
+                    return result;
                 }
 
-                var result = await ContentRepository.AddContent(content);
-
-                if (result)
-                    await baseContentRepository.ChangeIsCrawled(model);
-                return result;
+                return false;
             }
             catch (Exception e)
             {

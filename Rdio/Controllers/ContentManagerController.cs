@@ -46,18 +46,32 @@ namespace Rdio.Controllers
         }
 
         [Authorize]
-        public async Task<ActionResult> EditTemplate(string rssid,string templateid)
+        public async Task<ActionResult> EditTemplate(string siteid,string templateid)
         {
-            var rssModel = await ContentManagerRepository.RssInfo(rssid);
+            var SiteModel = await ContentManagerRepository.SiteInfo(siteid);
+            Models.Crawl.CrawlTemplate Template=null;
+            if (SiteModel.template != null)
+                Template = SiteModel.template.FirstOrDefault();
 
             var model = new ViewModel.ContentManager.TemplateVM()
             {
-                rssid = rssModel._id,
+                siteid = SiteModel._id,
                 name = "",
                 sampleurl = "",
                 type = "",
-                structures = new List<Tuple<string, string>>()
+                structure = new List<Models.Crawl.CrawlStructur>()
             };
+
+            if(Template!=null)
+                model= new ViewModel.ContentManager.TemplateVM()
+                {
+                    _id=Template._id,
+                    siteid = SiteModel._id,
+                    name = Template.name,
+                    sampleurl = Template.sampleurl,
+                    type = Template.type,
+                    structure = Template.structure
+                };
             return View(model);
         }
         public async Task<ActionResult> mohsen() {

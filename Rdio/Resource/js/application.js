@@ -145,7 +145,7 @@ Rdio = {
     'ContentManager': {
         'EditSiteModel': { 'title': '', 'url': '' },
         'EditRssModel': { '_id': '', 'siteid': '', 'title': '', 'url': '', 'tags': '', 'categories': '', 'lang': '' },
-        'EditTemplateModel': { '_id': '', 'rssid': '', 'name': '', 'type': '', 'sampleurl': '', 'structure': '' },
+        'EditTemplateModel': { '_id': '', 'siteid': '', 'name': '', 'type': '', 'sampleurl': '', 'structure': '' },
         'EditTemplateStructureModel': { 'field': '', 'query': '', 'type': '' },
 
         'Event':{
@@ -230,7 +230,7 @@ Rdio = {
                 $('body').on('click', '#edittemplatesubmit', function () {
                     var editmodel = Rdio.ContentManager.EditTemplateModel;
                     editmodel._id = $('[name="_id"]').val();
-                    editmodel.rssid = $('[name="rssid"]').val();
+                    editmodel.siteid = $('[name="siteid"]').val();
                     editmodel.name = $('#name').val();
                     editmodel.sampleurl = $('#sampleurl').val();
                     editmodel.type = $('#type').val();

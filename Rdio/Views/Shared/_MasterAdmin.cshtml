@@ -50,7 +50,9 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
                     <li><a href="/">صفحه اصلی</a></li>
-                    <li><a href="@Url.Action("Manage","BaseContent")">آخرین اخبار</a></li>
+                    <li><a href="@Url.Action("Manage","Content")">آخرین اخبار</a></li>
+
+                    <li><a href="@Url.Action("Manage","BaseContent")">آخرین اخبار2</a></li>
                     <li><a href="@Url.Action("SiteManage","ContentManager")">مدیریت سایت</a></li>
                     <li><a href="@Url.Action("EditSite","ContentManager")">افزودن سایت</a></li>
                     @*@if (User.Identity.IsAuthenticated)

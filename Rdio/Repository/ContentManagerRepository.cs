@@ -167,14 +167,22 @@ namespace Rdio.Repository
             return model;
 
         }
-        public async Task<bool> EditTemplate(string rssid,Models.Crawl.CrawlTemplate model)
+        public async Task<bool> EditTemplate(string siteid,Models.Crawl.CrawlTemplate model)
         {
             try
             {
                 var _id = ObjectId.GenerateNewId().ToString();
                 if (!string.IsNullOrWhiteSpace(model._id))
+                {
                     _id = model._id;
-                //var res = await NoSql.Instance.RunCommandAsync<BsonDocument>("{update:'rss',updates:[{q:{_id:ObjectId('" + rssid + "')},u:{$set:{_id:ObjectId('" + _id + "'),siteid:'" + model.siteid + "',userid:'" + Rdio.Util.Common.My.id + "',title:'" + model.title + "',createdateticks:" + DateTime.Now.Ticks + ",url:'" + model.url + "',lang:'" + model.lang + "',tags:" + model.tags.toJSON() + ",categories:" + model.categories.toJSON() + ",lastcrawldate:" + 0 + "}},upsert:true}]}");
+                    var res = await NoSql.Instance.RunCommandAsync<BsonDocument>("{update:'sites',updates:[{q:{_id:ObjectId('" + siteid + "')},u:{$set:{'template.0.name':'" + model.name + "','template.0.type':'" + model.type + "','template.0.sampleurl':'" + model.sampleurl + "','template.0.structure':" + model.structure.toJSON() + "}},upsert:false}]}");
+                    //var res = await NoSql.Instance.RunCommandAsync<BsonDocument>("{update:'sites',updates:[{q:{_id:ObjectId('" + siteid + "')},u:{$set:{template.$.name:'" + model.name + "'}},upsert:false}]}");
+
+                }
+                else
+                {
+                    var res = await NoSql.Instance.RunCommandAsync<BsonDocument>("{update:'sites',updates:[{q:{_id:ObjectId('" + siteid + "')},u:{$push:{template:{_id:ObjectId('" + _id + "'),name:'" + model.name + "',type:'" + model.type + "',sampleurl:'" + model.sampleurl + "',structure:" + model.structure.toJSON() + "}}},upsert:true}]}");
+                }
                 return true;
             }
             catch (Exception ex)
@@ -182,6 +190,22 @@ namespace Rdio.Repository
                 return false;
             }
         }
+        //public async Task<Models.Crawl.CrawlTemplate> CrawlTemplate(string siteid)
+        //{
+        //    var model = new Models.Crawl.CrawlTemplate();
+
+        //    try
+        //    {
+        //        var _model = await NoSql.Instance.RunCommandAsync<BsonDocument>("{aggregate:'sites',pipeline:[{$match:{_id:ObjectId('" + siteid + "')}},{$limit:1}]}");
+        //        if (_model.GetValue("result").AsBsonArray.Any())
+        //            model = MongoDB.Bson.Serialization.BsonSerializer.Deserialize<Models.Crawl.CrawlTemplate>(_model.GetValue("result")[0].AsBsonDocument);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //    }
+        //    return model;
+
+        //}
 
     }
 }
