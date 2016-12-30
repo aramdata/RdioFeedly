@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Web;
+using Rdio.Models.ContentManager;
 
 namespace Rdio.Util
 {
@@ -12,6 +13,16 @@ namespace Rdio.Util
             return System.Web.Hosting.HostingEnvironment.MapPath(path);
         }
 
+        public static List<Models.ContentManager.Block> AllBlocks()
+        {
+            return new List<Block>()
+            {
+                new Block() {title = "خبر برتر",code = "TOP"},
+                new Block() {title = "ویژه",code = "SPECIAL"},
+                new Block() {title = "آخرین اخبار",code = "LATESTNEWS"},
+                new Block() {title = "برگزیده",code = "SELECTED"},
+            };
+        }
         public enum ContentType
         {
             [Description("خبر")]

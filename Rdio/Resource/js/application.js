@@ -1,12 +1,14 @@
 ﻿
 Rdio = {
     'Tools': {
-        'Selectize': function (object, type) {
+        'Selectize': function (object, type, create) {
+            if (create == undefined)
+                create = true;
             if (type == 'MultiSelect') {
                 $(object).selectize({
                     plugins: ['remove_button'],
                     persist: false,
-                    create: true
+                    create: create
                 });
             }
             
@@ -51,6 +53,11 @@ Rdio = {
                     Rdio.Tools.Pagination.ContentSearchModel = model;
                     Rdio.Tools.Pagination.GetPagination(type, page);
                 }
+
+                if (type == 'CategoryManage') {
+                    Rdio.Tools.Pagination.GetPagination(type, 1);
+                }
+
             },
             'GetPagination': function (type, page) {
 
@@ -139,7 +146,35 @@ Rdio = {
                         }
                     });
                 }
+
+                if (type == 'CategoryManage') {
+                    loader($('#datacontainer'));
+                    $.ajax({
+                        method: "GET",
+                        url: "/api/ContentManager/CategoryManage",
+                        data: { "page": page}
+                    }).done(function (result) {
+                        disloader($('#datacontainer'));
+
+                        if (result.ServiceResultStatus == 0) {
+                            var source = $("#datamodel").html();
+                            var template = Handlebars.compile(source);
+                            var html = template(result);
+                            $("#datacontainer").html(html);
+                        }
+                        if (result.ServiceResultStatus == 1) {
+                            alert(result.ServiceResultMassage);
+                        }
+                    });
+                }
             }
+        },
+        'Confirm':function(message) {
+            var confirmR = confirm("مورد مورد نظر حذف گردد؟");
+            return confirmR;
+        },
+        'PushMessage':function(message, type) {
+            alert(message);
         }
     },
     'ContentManager': {
@@ -147,11 +182,36 @@ Rdio = {
         'EditRssModel': { '_id': '', 'siteid': '', 'title': '', 'url': '', 'tags': '', 'categories': '', 'lang': '' },
         'EditTemplateModel': { '_id': '', 'siteid': '', 'name': '', 'type': '', 'sampleurl': '', 'structure': '' },
         'EditTemplateStructureModel': { 'field': '', 'query': '', 'type': '' },
+        'DeleteSiteModel': { 'id': '' },
+        'EditCategoryModel': { '_id': '','userid':'', 'title': '', 'parentid': '', 'blocks': ''},
 
         'Event':{
             'SiteManage':function(){
                 Rdio.Tools.Pagination.Event('SiteManage', 1);
-            
+                $('body').on('click', '.DeleteSite', function () {
+                    siteId = $(this).attr('data-siteid');
+                    var confirmR = Rdio.Tools.Confirm();
+                    var model = Rdio.ContentManager.DeleteSiteModel;
+                    model.id = siteId;
+                    if (confirmR == true) {
+                        $.ajax({
+                            method: "POST",
+                            url: "/api/ContentManager/DeleteSite",
+                            data: model
+                        }).done(function (result) {
+                            if (result.ServiceResultStatus == 0) {
+                                $(this).closest('tr').remove();
+                            }
+                            if (result.ServiceResultStatus == 1) {
+                                Rdio.Tools.PushMessage(result.ServiceResultMassage);
+                            }
+                        }).fail(function (result) {
+                            Rdio.Tools.PushMessage(result.responseText);
+                        });
+                    }
+                    
+                });
+
             },
             'EditSite': function () {
 
@@ -253,6 +313,44 @@ Rdio = {
                         if (result.ServiceResultStatus == 0) {
                             alert(result.ServiceResultMassage);
                             //window.location = '/ContentManager/RssManage?siteid=' + editmodel.siteid;
+                        }
+                        if (result.ServiceResultStatus == 1) {
+                            alert(result.ServiceResultMassage);
+                        }
+                    });
+                });
+            },
+            'CategoryManage': function () {
+                Rdio.Tools.Pagination.Event('CategoryManage', 1);
+            },
+            'EditCategory': function () {
+                Rdio.Tools.Selectize($('#parentid'), 'MultiSelect', false);
+                Rdio.Tools.Selectize($('#blocks'), 'MultiSelect',false);
+
+                $('body').on('click', '#editcategorysubmit', function () {
+                    var editmodel = Rdio.ContentManager.EditCategoryModel;
+                    editmodel._id = $('[name="_id"]').val();
+                    editmodel.userid = $('[name="userid"]').val();
+                    editmodel.title = $('#title').val();
+                    editmodel.parentid = $('#parentid').val();
+                    editmodel.blocks = [];
+
+                    $($('#blocks').val()).each(function (i, v) {
+                        debugger;
+                        var blockModel = {};
+                        blockModel.title = v.split('|')[0];
+                        blockModel.code = v.split('|')[1];
+                        editmodel.blocks.push(blockModel);
+                    });
+
+                    $.ajax({
+                        method: "POST",
+                        url: "/api/ContentManager/EditCategory",
+                        data: editmodel
+                    }).done(function (result) {
+                        if (result.ServiceResultStatus == 0) {
+                            alert(result.ServiceResultMassage);
+                            window.location = '/ContentManager/CategoryManage';
                         }
                         if (result.ServiceResultStatus == 1) {
                             alert(result.ServiceResultMassage);

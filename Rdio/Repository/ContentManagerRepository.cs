@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Web;
 using Rdio.Util;
 using MongoDB.Driver;
+using Rdio.Models.ContentManager;
 
 namespace Rdio.Repository
 {
@@ -20,6 +21,20 @@ namespace Rdio.Repository
                 if (!string.IsNullOrWhiteSpace(model._id))
                     _id = model._id;
                 var res = await NoSql.Instance.RunCommandAsync<BsonDocument>("{update:'sites',updates:[{q:{_id:ObjectId('" + _id + "')},u:{$set:{_id:ObjectId('" + _id + "'),userid:'"+Rdio.Util.Common.My.id+"',title:'" + model.title + "',createdateticks:" + DateTime.Now.Ticks+ ",url:'" + model.url + "'}},upsert:true}]}");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+        public async Task<bool> DeleteSite(string id)
+        {
+            try
+            {
+                var res = await NoSql.Instance.RunCommandAsync<BsonDocument>("{delete:'sites',deletes:[{q:{_id:ObjectId('" + id + "')},limit:1}]}");
+                res = await NoSql.Instance.RunCommandAsync<BsonDocument>("{delete:'rss',deletes:[{q:{siteid:'"+id+"'},limit:0}]}");
+
                 return true;
             }
             catch (Exception ex)
@@ -150,6 +165,23 @@ namespace Rdio.Repository
             return model;
 
         }
+        public async Task<List<Models.ContentManager.Rss>> GetSiteAllRss(string id)
+        {
+            var model = new List<Models.ContentManager.Rss>();
+            try
+            {
+                var _model = await NoSql.Instance.RunCommandAsync<BsonDocument>("{aggregate:'rss',pipeline:[{$match:{siteid:'" + id + "'}}]}");
+                if (_model.GetValue("result").AsBsonArray.Any())
+                    foreach (var item in _model.GetValue("result").AsBsonArray)
+                        model.Add(MongoDB.Bson.Serialization.BsonSerializer.Deserialize<Models.ContentManager.Rss>(item.AsBsonDocument));
+
+            }
+            catch (Exception ex)
+            {
+            }
+            return model;
+
+        }
         public async Task<List<Models.ContentManager.Site>> GetUserAllSite(string id)
         {
             var model = new List<Models.ContentManager.Site>();
@@ -206,6 +238,60 @@ namespace Rdio.Repository
         //    return model;
 
         //}
+        public async Task<List<Models.ContentManager.Category>> GetUserCategories(string id)
+        {
+            var model = new List<Models.ContentManager.Category>();
+            try
+            {
+                var _model = await NoSql.Instance.RunCommandAsync<BsonDocument>("{aggregate:'categories',pipeline:[{$match:{userid:'" + id + "'}}]}");
+                if (_model.GetValue("result").AsBsonArray.Any())
+                    foreach (var item in _model.GetValue("result").AsBsonArray)
+                        model.Add(MongoDB.Bson.Serialization.BsonSerializer.Deserialize<Models.ContentManager.Category>(item.AsBsonDocument));
+
+            }
+            catch (Exception ex)
+            {
+            }
+            return model;
+
+        }
+        public async Task<bool> EditCategory(Models.ContentManager.Category model)
+        {
+            try
+            {
+                var _id = ObjectId.GenerateNewId().ToString();
+                if (!string.IsNullOrWhiteSpace(model._id))
+                    _id = model._id;
+                var res = await NoSql.Instance.RunCommandAsync<BsonDocument>("{update:'categories',updates:[{q:{_id:ObjectId('" + _id + "')},u:{$set:{_id:ObjectId('" + _id + "'),title:'" + model.title + "',userid:'" + model.userid + "',parentId:'" + model.parentId + "',blocks:" + model.blocks.toJSON() + "}},upsert:true}]}");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+        public async Task<Models.ContentManager.Category> CategoryInfo(string id)
+        {
+            var model = new Models.ContentManager.Category()
+            {
+                _id = string.Empty,
+                blocks = new List<Block>(),
+                parentId = string.Empty,
+                title = string.Empty,
+                userid = string.Empty
+            };
+            try
+            {
+                var _model = await NoSql.Instance.RunCommandAsync<BsonDocument>("{aggregate:'categories',pipeline:[{$match:{_id:ObjectId('" + id + "')}},{$limit:1}]}");
+                if (_model.GetValue("result").AsBsonArray.Any())
+                    model = MongoDB.Bson.Serialization.BsonSerializer.Deserialize<Models.ContentManager.Category>(_model.GetValue("result")[0].AsBsonDocument);
+            }
+            catch (Exception ex)
+            {
+            }
+            return model;
+
+        }
 
     }
 }

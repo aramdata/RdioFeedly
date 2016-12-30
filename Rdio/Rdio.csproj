@@ -504,6 +504,8 @@
     </Compile>
     <Compile Include="Models\BaseContent\BaseContent.cs" />
     <Compile Include="Models\BaseRssItem.cs" />
+    <Compile Include="Models\ContentManager\Block.cs" />
+    <Compile Include="Models\ContentManager\Category.cs" />
     <Compile Include="Models\ContentManager\Rss.cs" />
     <Compile Include="Models\ContentManager\Site.cs" />
     <Compile Include="Models\Content\Content.cs" />
@@ -532,7 +534,11 @@
     <Compile Include="ViewModel\BaseContent\SimpleBaseContentManageVM.cs" />
     <Compile Include="ViewModel\BaseContent\SimpleBaseContentVM.cs" />
     <Compile Include="ViewModel\BaseContent\BaseContentSearchVM.cs" />
+    <Compile Include="ViewModel\ContentManager\CategoryManageServiceResult.cs" />
     <Compile Include="ViewModel\ContentManager\EditTemplateVM.cs" />
+    <Compile Include="ViewModel\ContentManager\SimpleCategoryManageVM.cs" />
+    <Compile Include="ViewModel\ContentManager\SimpleCategoryRssBindManageVM.cs" />
+    <Compile Include="ViewModel\ContentManager\SimpleDeleteSite.cs" />
     <Compile Include="ViewModel\ContentManager\SimpleRssVM.cs" />
     <Compile Include="ViewModel\ContentManager\SimpleSiteVM.cs" />
     <Compile Include="ViewModel\ContentManager\RssVM.cs" />
@@ -624,6 +630,8 @@
     <Content Include="Views\Content\item.cshtml" />
     <Content Include="Views\Content\Manage.cshtml" />
     <Content Include="Views\ContentManager\_EditTemplateItem.cshtml" />
+    <Content Include="Views\ContentManager\CategoryManage.cshtml" />
+    <Content Include="Views\ContentManager\BlockRssBindManage.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

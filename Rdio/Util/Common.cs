@@ -39,7 +39,59 @@ namespace Rdio.Util
             [Description("انگلیسی")]
             English = 1
         }
-       
+
+        public static string PersianNumberToEnglishNumber(string input)
+        {
+            if (input.Trim() == "") return "";
+
+            //۰ ۱ ۲ ۳ ۴ ۵ ۶ ۷ ۸ ۹
+            input = input.Replace("۰", "0");
+            input = input.Replace("۱", "1");
+            input = input.Replace("۲", "2");
+            input = input.Replace("۳", "3");
+            input = input.Replace("۴", "4");
+            input = input.Replace("۵", "5");
+            input = input.Replace("۶", "6");
+            input = input.Replace("۷", "7");
+            input = input.Replace("۸", "8");
+            input = input.Replace("۹", "9");
+            return input;
+        }
+
+        public static string CleanHtmlContent(string html)
+        {
+            string noHTML = Regex.Replace(html, @"<[^>]+>|&nbsp;", "").Trim();
+            string noHTMLNormalised = Regex.Replace(noHTML, @"\s{2,}", " ");
+            return noHTMLNormalised;
+        }
+
+        public static DateTime ParsDateFromHtml(string html)
+        {
+            //in Time Remove All Space for example (2016 - 12 - 29T14: 55:13Z) => (2016-12-29T14:55:13Z)
+            var DateSimple1 = @"(\d+)(-|\/)(\d+)(?:-|\/)(?:(\d+)|s+(\d+):(\d+)(?::(\d+))?(?:\.(\d+))?)?";
+            var DateSimple2 = @"\d{2,4} + (دی)\s + \d{1,2}";
+            var DateSimple3 = @"(Jan(uary)?|Feb(ruary)?|Mar(ch)?|Apr(il)?|May|Jun(e)?|Jul(y)?|Aug(ust)?|Sep(tember)?|Oct(ober)?|Nov(ember)?|Dec(ember)?)\s+\d{1,2},\s+\d{4}";
+
+            var TimeSimple1 = @"([01]?[0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9])?";
+
+            var Clean = PersianNumberToEnglishNumber(html);
+            var _Date=Regex.Matches(Clean, DateSimple1);
+            var _Time= Regex.Matches(Clean.Replace(" ",""), TimeSimple1);
+
+            var _d= Regex.Matches(Clean, DateSimple2);
+            var Date = "";
+            var Time = "";
+
+            foreach (Match item in _Date)
+                if (item.Length > Date.Length)
+                    Date = item.Value;
+
+            foreach (Match item in _Time)
+                if (item.Length > Time.Length)
+                    Time = item.Value;
+
+            return new DateTime();
+        }
         public static string GetMD5(string input)
         {
             MD5 md5 = System.Security.Cryptography.MD5.Create();

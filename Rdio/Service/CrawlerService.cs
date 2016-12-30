@@ -90,7 +90,7 @@ namespace Rdio.Service
                             switch (item.type)
                             {
                                 case "innerhtml":
-                                    elementcontent = element.InnerHtml;
+                                    elementcontent = Util.Common.CleanHtmlContent(element.InnerHtml);
                                     break;
                                 case "src":
                                     elementcontent = element.GetAttribute(item.type);

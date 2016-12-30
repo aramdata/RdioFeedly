@@ -7,6 +7,7 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
+using Newtonsoft.Json.Linq;
 
 namespace Rdio.Api
 {
@@ -27,6 +28,36 @@ namespace Rdio.Api
                     url = model.url
                 });
 
+                if (res)
+                    return new ViewModel.ServiceResult()
+                    {
+                        ServiceResultStatus = (int)Rdio.Util.Common.ServiceResultStatus.OK,
+                        ServiceResultMassage = Util.Common.ServiceResultMessage.OKMessage.ToString()
+                    };
+                else
+                    return new ViewModel.ServiceResult()
+                    {
+                        ServiceResultStatus = (int)Rdio.Util.Common.ServiceResultStatus.Error,
+                        ServiceResultMassage = Util.Common.ServiceResultMessage.FaildMessage.ToString()
+                    };
+            }
+            catch (Exception ex)
+            {
+                return new ViewModel.ServiceResult()
+                {
+                    ServiceResultStatus = (int)Rdio.Util.Common.ServiceResultStatus.Error,
+                    ServiceResultMassage = ex.GetBaseException().Message
+                };
+            }
+        }
+
+        [Authorize]
+        [Route("api/ContentManager/DeleteSite")]
+        public async Task<ViewModel.ServiceResult> PostDeleteSite([FromBody]ViewModel.ContentManager.SimpleDeleteSite model)
+        {
+            try
+            {
+                var res = await ContentManagerRepository.DeleteSite(model.id);
                 if (res)
                     return new ViewModel.ServiceResult()
                     {
@@ -189,6 +220,77 @@ namespace Rdio.Api
                 return new ViewModel.ServiceResult()
                 {
                     ServiceResultStatus = (int)Rdio.Util.Common.ServiceResultStatus.Error,
+                    ServiceResultMassage = ex.GetBaseException().Message
+                };
+            }
+        }
+
+        [Authorize]
+        [Route("api/ContentManager/EditCategory")]
+        public async Task<ViewModel.ServiceResult> PostEditCategory([FromBody]ViewModel.ContentManager.SimpleCategoryManageVM model)
+        {
+            try
+            {
+                var res = await ContentManagerRepository.EditCategory(new Models.ContentManager.Category()
+                {
+                    _id = model._id,
+                    title = model.title,
+                    parentId = model.parentId,
+                    userid = model.userId,
+                    blocks = model.blocks
+                });
+
+                if (res)
+                    return new ViewModel.ServiceResult()
+                    {
+                        ServiceResultStatus = (int)Rdio.Util.Common.ServiceResultStatus.OK,
+                        ServiceResultMassage = Util.Common.ServiceResultMessage.OKMessage.ToString()
+                    };
+                else
+                    return new ViewModel.ServiceResult()
+                    {
+                        ServiceResultStatus = (int)Rdio.Util.Common.ServiceResultStatus.Error,
+                        ServiceResultMassage = Util.Common.ServiceResultMessage.FaildMessage.ToString()
+                    };
+            }
+            catch (Exception ex)
+            {
+                return new ViewModel.ServiceResult()
+                {
+                    ServiceResultStatus = (int)Rdio.Util.Common.ServiceResultStatus.Error,
+                    ServiceResultMassage = ex.GetBaseException().Message
+                };
+            }
+        }
+
+        [Authorize]
+        [Route("api/ContentManager/CategoryManage")]
+        public async Task<ViewModel.ContentManager.CategoryManageServiceResult> GetCategoryManage(int page)
+        {
+            try
+            {
+                page = page < 1 ? 1 : page;
+                var limit = 20;
+                var skip = limit * (page - 1);
+
+                string q = "{aggregate:'categories',pipeline:[{$match:{'userid':'" + Rdio.Util.Common.My.id + "'}},{$sort : { '_id' : -1  }},{$skip:" + skip.ToString() + "},{$limit:" + limit.ToString() + "}]}";
+                var _model = await NoSql.Instance.RunCommandAsync<BsonDocument>(q);
+                var model = new List<Models.ContentManager.Category>();
+                foreach (var item in _model.GetValue("result").AsBsonArray)
+                    model.Add(MongoDB.Bson.Serialization.BsonSerializer.Deserialize<Models.ContentManager.Category>(item.AsBsonDocument));
+                var result = new ViewModel.ContentManager.CategoryManageServiceResult();
+                result.Data = model;
+                result.CurrentPage = page;
+                result.PrevPage = (page == 1 ? 2 : page) - 1;
+                result.NextPage = page + 1;
+                result.ServiceResultStatus = (int)Util.Common.ServiceResultStatus.OK;
+                return result;
+            }
+            catch (Exception ex)
+            {
+                return new ViewModel.ContentManager.CategoryManageServiceResult()
+                {
+                    ServiceResultStatus = (int)Util.Common.ServiceResultStatus.Error,
                     ServiceResultMassage = ex.GetBaseException().Message
                 };
             }
