@@ -66,6 +66,9 @@ namespace Rdio.Service
         {
             try
             {
+                var MainRssPattern = "rss/channel/item";
+                var MainFeedPattern = "//atom:entry";
+
                 if (string.IsNullOrEmpty(url))
                     return new List<Models.BaseRssItem>();
                 string htmlContent = "";
@@ -81,26 +84,62 @@ namespace Rdio.Service
                 }
                 XmlDocument rssXmlDoc = new XmlDocument();
                 rssXmlDoc.LoadXml(htmlContent);
-                XmlNodeList rssNodes = rssXmlDoc.SelectNodes("rss/channel/item");
+                XmlNodeList rssNodes = rssXmlDoc.SelectNodes(MainRssPattern);
                 var res = new List<Models.BaseRssItem>();
-                foreach (XmlNode rssNode in rssNodes)
+
+                if(rssNodes.Count>0)
                 {
-                    XmlNode rssSubNode = rssNode.SelectSingleNode("title");
-                    string title = rssSubNode != null ? rssSubNode.InnerText : "";
+                    foreach (XmlNode rssNode in rssNodes)
+                    {
+                        XmlNode rssSubNode = rssNode.SelectSingleNode("title");
+                        string title = rssSubNode != null ? rssSubNode.InnerText : "";
 
-                    rssSubNode = rssNode.SelectSingleNode("link");
-                    string link = rssSubNode != null ? rssSubNode.InnerText : "";
+                        rssSubNode = rssNode.SelectSingleNode("link");
+                        string link = rssSubNode != null ? rssSubNode.InnerText : "";
 
-                    rssSubNode = rssNode.SelectSingleNode("description");
-                    string description = rssSubNode != null ? rssSubNode.InnerText : "";
+                        rssSubNode = rssNode.SelectSingleNode("description");
+                        string description = rssSubNode != null ? rssSubNode.InnerText : "";
 
-                    rssSubNode = rssNode.SelectSingleNode("pubDate");
-                    string date = rssSubNode != null ? rssSubNode.InnerText : "";
-                    var datetime = DateTime.Now;
-                    DateTime.TryParse(date, out datetime);
+                        rssSubNode = rssNode.SelectSingleNode("pubDate");
+                        string date = rssSubNode != null ? rssSubNode.InnerText : "";
+                        var datetime = DateTime.Now;
+                        if (!string.IsNullOrWhiteSpace(date))
+                            DateTime.TryParse(date, out datetime);
 
-                    res.Add(new Models.BaseRssItem() { title = title, url = link, description = description, dateticks = datetime.Ticks });
+                        res.Add(new Models.BaseRssItem() { title = title, url = link, description = description, dateticks = datetime.Ticks });
+                    }
                 }
+                else
+                {
+                    XmlNamespaceManager nsMngr = new XmlNamespaceManager(new NameTable());
+                    nsMngr.AddNamespace(string.Empty, "http://www.w3.org/2005/Atom");
+                    nsMngr.AddNamespace("app", "http://purl.org/atom/app#");
+                    nsMngr.AddNamespace("atom", "http://www.w3.org/2005/Atom");
+                    rssNodes = rssXmlDoc.DocumentElement.SelectNodes(MainFeedPattern, nsMngr);
+                    if (rssNodes.Count > 0)
+                    {
+                        foreach (XmlNode rssNode in rssNodes)
+                        {
+                            XmlNode rssSubNode = rssNode.SelectSingleNode("title");
+                            string title = rssSubNode != null ? rssSubNode.InnerText : "";
+
+                            rssSubNode = rssNode.SelectSingleNode("id");
+                            string link = rssSubNode != null ? rssSubNode.InnerText : "";
+
+                            rssSubNode = rssNode.SelectSingleNode("summary");
+                            string description = rssSubNode != null ? rssSubNode.InnerText : "";
+
+                            rssSubNode = rssNode.SelectSingleNode("published");
+                            string date = rssSubNode != null ? rssSubNode.InnerText : "";
+                            var datetime = DateTime.Now;
+                            if (!string.IsNullOrWhiteSpace(date))
+                                DateTime.TryParse(date, out datetime);
+
+                            res.Add(new Models.BaseRssItem() { title = title, url = link, description = description, dateticks = datetime.Ticks });
+                        }
+                    }
+                }
+                
                 return res;
             }
             catch (Exception ex)

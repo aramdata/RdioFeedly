@@ -178,7 +178,7 @@ Rdio = {
         }
     },
     'ContentManager': {
-        'EditSiteModel': { 'title': '', 'url': '' },
+        'EditSiteModel': { '_id': '', 'title': '', 'url': '' },
         'EditRssModel': { '_id': '', 'siteid': '', 'title': '', 'url': '', 'tags': '', 'categories': '', 'lang': '' },
         'EditTemplateModel': { '_id': '', 'siteid': '', 'name': '', 'type': '', 'sampleurl': '', 'structure': '' },
         'EditTemplateStructureModel': { 'field': '', 'query': '', 'type': '' },
@@ -190,6 +190,7 @@ Rdio = {
                 Rdio.Tools.Pagination.Event('SiteManage', 1);
                 $('body').on('click', '.DeleteSite', function () {
                     siteId = $(this).attr('data-siteid');
+                    objhtml = $(this);
                     var confirmR = Rdio.Tools.Confirm();
                     var model = Rdio.ContentManager.DeleteSiteModel;
                     model.id = siteId;
@@ -200,7 +201,7 @@ Rdio = {
                             data: model
                         }).done(function (result) {
                             if (result.ServiceResultStatus == 0) {
-                                $(this).closest('tr').remove();
+                                $(objhtml).closest('tr').remove();
                             }
                             if (result.ServiceResultStatus == 1) {
                                 Rdio.Tools.PushMessage(result.ServiceResultMassage);
@@ -219,6 +220,8 @@ Rdio = {
                     var editmodel = Rdio.ContentManager.EditSiteModel;
                     editmodel.title = $('#title').val();
                     editmodel.url = $('#url').val();
+                    editmodel._id = $('[name="_id"]').val();
+
                     $.ajax({
                         method: "POST",
                         url: "/api/ContentManager/EditSite",

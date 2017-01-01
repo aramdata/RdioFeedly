@@ -13,11 +13,19 @@ namespace Rdio.Controllers
         Repository.ContentManagerRepository ContentManagerRepository = new Repository.ContentManagerRepository();
 
         [Authorize]
-        public ActionResult EditSite(string id)
+        public async Task<ActionResult> EditSite(string id)
         {
+            var SiteInfo = await ContentManagerRepository.SiteInfo(id);
             var model = new ViewModel.ContentManager.SiteVM();
             if (!string.IsNullOrWhiteSpace(id))
-                model = new ViewModel.ContentManager.SiteVM();
+                model = new ViewModel.ContentManager.SiteVM
+                {
+                    title=SiteInfo.title,
+                    url=SiteInfo.url,
+                    _id=SiteInfo._id,
+                    userid=SiteInfo.userid,
+                    createdateticks=SiteInfo.createdateticks
+                };
             return View(model);
         }
         [Authorize]
