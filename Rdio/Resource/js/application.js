@@ -239,6 +239,30 @@ Rdio = {
             },
             'RssManage': function () {
                 Rdio.Tools.Pagination.Event('RssManage', 1);
+                $('body').on('click', '.DeleteRss', function () {
+                    rssId = $(this).attr('data-rssid');
+                    objhtml = $(this);
+                    var confirmR = Rdio.Tools.Confirm();
+                    //var model = Rdio.ContentManager.DeleteSiteModel;
+                    //model.id = siteId;
+                    if (confirmR == true) {
+                        $.ajax({
+                            method: "POST",
+                            url: "/api/ContentManager/DeleteSite",
+                            data: { 'id': rssId }
+                        }).done(function (result) {
+                            if (result.ServiceResultStatus == 0) {
+                                $(objhtml).closest('tr').remove();
+                            }
+                            if (result.ServiceResultStatus == 1) {
+                                Rdio.Tools.PushMessage(result.ServiceResultMassage);
+                            }
+                        }).fail(function (result) {
+                            Rdio.Tools.PushMessage(result.responseText);
+                        });
+                    }
+
+                });
 
             },
             'EditRss': function () {

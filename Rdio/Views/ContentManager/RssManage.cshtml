@@ -81,8 +81,9 @@
                     <td>{{title}}</td>
                     <td>{{url}}</td>
                     <td>
-                        <a href="/ContentManager/RssManage?id={{_id}}&siteid={{siteid}}"><i class="fa fa-pencil fa-lg" aria-hidden="true" title="ویرایش"></i></a>
                         <a href="/BaseContent/Manage?rssid={{_id}}"><i class="fa fa-list fa-lg" aria-hidden="true" title="لیست اخبار"></i></a>
+                        <a href="/ContentManager/RssManage?id={{_id}}&siteid={{siteid}}"><i class="fa fa-pencil fa-lg" aria-hidden="true" title="ویرایش"></i></a>
+                        <span data-rssid="{{_id}}" class="DeleteRss"><i class="fa fa-trash fa-lg span-icon" aria-hidden="true" title="حذف RSS"></i></span>
 
                     </td>
                 </tr>
