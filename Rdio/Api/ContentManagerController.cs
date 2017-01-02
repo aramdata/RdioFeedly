@@ -295,5 +295,35 @@ namespace Rdio.Api
                 };
             }
         }
+
+        [Authorize]
+        [Route("api/ContentManager/DeleteRss")]
+        public async Task<ViewModel.ServiceResult> PostDeleteRss([FromBody]ViewModel.ContentManager.SimpleDeleteSite model)
+        {
+            try
+            {
+                var res = await ContentManagerRepository.DeleteRss(model.id);
+                if (res)
+                    return new ViewModel.ServiceResult()
+                    {
+                        ServiceResultStatus = (int)Rdio.Util.Common.ServiceResultStatus.OK,
+                        ServiceResultMassage = Util.Common.ServiceResultMessage.OKMessage.ToString()
+                    };
+                else
+                    return new ViewModel.ServiceResult()
+                    {
+                        ServiceResultStatus = (int)Rdio.Util.Common.ServiceResultStatus.Error,
+                        ServiceResultMassage = Util.Common.ServiceResultMessage.FaildMessage.ToString()
+                    };
+            }
+            catch (Exception ex)
+            {
+                return new ViewModel.ServiceResult()
+                {
+                    ServiceResultStatus = (int)Rdio.Util.Common.ServiceResultStatus.Error,
+                    ServiceResultMassage = ex.GetBaseException().Message
+                };
+            }
+        }
     }
 }

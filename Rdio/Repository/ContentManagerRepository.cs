@@ -104,6 +104,21 @@ namespace Rdio.Repository
                 return false;
             }
         }
+        public async Task<bool> DeleteRss(string id)
+        {
+            try
+            {
+                var res = await NoSql.Instance.RunCommandAsync<BsonDocument>("{delete:'rss',deletes:[{q:{_id:ObjectId('" + id + "')},limit:1}]}");
+                res = await NoSql.Instance.RunCommandAsync<BsonDocument>("{delete:'basecontent',deletes:[{q:{rssid:'" + id + "'},limit:0}]}");
+                res = await NoSql.Instance.RunCommandAsync<BsonDocument>("{delete:'content',deletes:[{q:{rssid:'" + id + "'},limit:0}]}");
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
         public async Task<List<Models.ContentManager.Rss>> DequeRss(int count) {
             var model = new List<Models.ContentManager.Rss>();
             try

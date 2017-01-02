@@ -248,7 +248,7 @@ Rdio = {
                     if (confirmR == true) {
                         $.ajax({
                             method: "POST",
-                            url: "/api/ContentManager/DeleteSite",
+                            url: "/api/ContentManager/DeleteRss",
                             data: { 'id': rssId }
                         }).done(function (result) {
                             if (result.ServiceResultStatus == 0) {

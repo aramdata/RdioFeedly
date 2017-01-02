@@ -120,16 +120,17 @@ namespace Rdio.Service
                     {
                         foreach (XmlNode rssNode in rssNodes)
                         {
-                            XmlNode rssSubNode = rssNode.SelectSingleNode("title");
+                            XmlNode rssSubNode = rssNode.SelectSingleNode("./atom:title",nsMngr);
                             string title = rssSubNode != null ? rssSubNode.InnerText : "";
 
-                            rssSubNode = rssNode.SelectSingleNode("id");
-                            string link = rssSubNode != null ? rssSubNode.InnerText : "";
+                            //rssSubNode = rssNode.SelectSingleNode("./atom:id", nsMngr);
+                            rssSubNode = rssNode.SelectSingleNode("./atom:link[1]", nsMngr);
+                            string link = (rssSubNode != null && rssSubNode.Attributes!=null) ? rssSubNode.Attributes["href"].Value : "";
 
-                            rssSubNode = rssNode.SelectSingleNode("summary");
+                            rssSubNode = rssNode.SelectSingleNode("./atom:summary", nsMngr);
                             string description = rssSubNode != null ? rssSubNode.InnerText : "";
 
-                            rssSubNode = rssNode.SelectSingleNode("published");
+                            rssSubNode = rssNode.SelectSingleNode("./atom:published", nsMngr);
                             string date = rssSubNode != null ? rssSubNode.InnerText : "";
                             var datetime = DateTime.Now;
                             if (!string.IsNullOrWhiteSpace(date))
