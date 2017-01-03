@@ -535,6 +535,7 @@
     <Compile Include="ViewModel\BaseContent\SimpleBaseContentVM.cs" />
     <Compile Include="ViewModel\BaseContent\BaseContentSearchVM.cs" />
     <Compile Include="ViewModel\ContentManager\CategoryManageServiceResult.cs" />
+    <Compile Include="ViewModel\ContentManager\CategoryRssBindEditVM.cs" />
     <Compile Include="ViewModel\ContentManager\EditTemplateVM.cs" />
     <Compile Include="ViewModel\ContentManager\SimpleCategoryManageVM.cs" />
     <Compile Include="ViewModel\ContentManager\SimpleCategoryRssBindManageVM.cs" />

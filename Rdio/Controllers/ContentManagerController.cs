@@ -121,11 +121,21 @@ namespace Rdio.Controllers
             //if (!string.IsNullOrEmpty(categoryModel.parentId) && categoryModel.parentId != "-1")
             //    ParentTitle = (await ContentManagerRepository.CategoryInfo(categoryModel.parentId)).title;
             var UserId = Util.Common.My.id;
+            var UserRss = await ContentManagerRepository.GetUserAllRss(UserId);
+            var RssSitesInfo = await ContentManagerRepository.SitesInfo(UserRss);
+            var UserCategories = await ContentManagerRepository.GetUserCategories(UserId);
+            var RssSitesName = new List<Tuple<string, string>>();
+            foreach (var rss in UserRss)
+            {
+                var SiteInfo = RssSitesInfo.FirstOrDefault(q => q._id == rss.siteid);
+                RssSitesName.Add(new Tuple<string, string>(rss._id,SiteInfo.title));
+            }
             var model = new ViewModel.ContentManager.SimpleCategoryRssBindManageVM()
             {
-                Rss = await ContentManagerRepository.GetUserAllRss(UserId),
-                Categories = await ContentManagerRepository.GetUserCategories(UserId),
-                UserId= UserId
+                Rss = UserRss,
+                Categories = UserCategories,
+                UserId= UserId,
+                RssSitesName = RssSitesName
             };
             return View(model);
         }

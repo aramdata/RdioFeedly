@@ -8,6 +8,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Newtonsoft.Json.Linq;
+using Rdio.ViewModel;
 
 namespace Rdio.Api
 {
@@ -315,6 +316,42 @@ namespace Rdio.Api
                         ServiceResultStatus = (int)Rdio.Util.Common.ServiceResultStatus.Error,
                         ServiceResultMassage = Util.Common.ServiceResultMessage.FaildMessage.ToString()
                     };
+            }
+            catch (Exception ex)
+            {
+                return new ViewModel.ServiceResult()
+                {
+                    ServiceResultStatus = (int)Rdio.Util.Common.ServiceResultStatus.Error,
+                    ServiceResultMassage = ex.GetBaseException().Message
+                };
+            }
+        }
+
+
+        [Authorize]
+        [Route("api/ContentManager/EditBlockRssBind")]
+        public async Task<ServiceResult> PostEditBlockRssBind([FromBody]ViewModel.ContentManager.CategoryRssBindEditVM model)
+        {
+            try
+            {
+                foreach (var CategoryGroup in model.BlockRssBind.GroupBy(q=>q.CategoryId))
+                {
+                    foreach (var BlockCodeGroup in CategoryGroup.GroupBy(q=>q.BlockCode))
+                    {
+                        var BlockModel = new Models.ContentManager.Block
+                        {
+                            code = BlockCodeGroup.FirstOrDefault().BlockCode,
+                            blockrssbind = (from b in BlockCodeGroup select b.RssId).ToList()
+                        };
+                        var res = await ContentManagerRepository.EditCategoryBlocks(BlockCodeGroup.FirstOrDefault().CategoryId, BlockModel);
+                    }
+
+                }
+                return new ViewModel.ServiceResult()
+                {
+                    ServiceResultStatus = (int)Rdio.Util.Common.ServiceResultStatus.OK,
+                    ServiceResultMassage = Util.Common.ServiceResultMessage.OKMessage.ToString()
+                };
             }
             catch (Exception ex)
             {

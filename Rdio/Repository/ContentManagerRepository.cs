@@ -64,6 +64,14 @@ namespace Rdio.Repository
             return model;
 
         }
+        public async Task<List<Models.ContentManager.Site>> SitesInfo(List<Rss> Rss )
+        {
+            var Result=new List<Models.ContentManager.Site> ();
+            foreach (var item in Rss)
+                Result.Add((await SiteInfo(item.siteid)));
+            return Result;
+        }
+
         public async Task<Models.ContentManager.Rss> RssInfo(string id)
         {
             var model = new Models.ContentManager.Rss() {
@@ -306,6 +314,18 @@ namespace Rdio.Repository
             }
             return model;
 
+        }
+        public async Task<bool> EditCategoryBlocks(string CategoryId,Models.ContentManager.Block block)
+        {
+            try
+            {
+                var res = await NoSql.Instance.RunCommandAsync<BsonDocument>("{update:'categories',updates:[{q:{_id:ObjectId('" + CategoryId + "'),blocks.code:'"+ block.code + "'},u:{$set:{blocks.$.blockrssbind:" + block.blockrssbind.toJSON() + "}},upsert:false}]}");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
         }
 
     }

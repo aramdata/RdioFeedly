@@ -393,16 +393,56 @@ Rdio = {
                     var blockCode = $('#categoryidblockcode').val().split('|')[1];
                     var CategoryBlockTitle = $('#categoryidblockcode option:selected').text();
 
-                    var source = $("#blockrssbindtemplatemodel").html();
-                    var template = Handlebars.compile(source);
-                    var result = { 'Title': CategoryBlockTitle + ' -> ' + rssTitle };
-                    var html = template(result);
-                    $("#blockrssbindcontainer").append(html);
+                    var CatIdBCodeRssId = categoryid + "|" + blockCode + "|" + rssid;
+
+                    //Prevent Repeated Data
+                    var IsRepeatedData = false;
+                    $('#blockrssbindcontainer .BlockRssBindItem').each(function(i, v) {
+                        if ($(this).attr('data-CatIdBCodeRssId') == CatIdBCodeRssId) {
+                            Rdio.Tools.PushMessage("این رابطه در لیست وجود دارد.");
+                            IsRepeatedData = true;
+                            return false;
+                        }
+                    });
+
+                    if (!IsRepeatedData) {
+                        var source = $("#blockrssbindtemplatemodel").html();
+                        var template = Handlebars.compile(source);
+                        var result = { 'Title': CategoryBlockTitle + ' -> ' + rssTitle, 'CatIdBCodeRssId': CatIdBCodeRssId };
+                        var html = template(result);
+                        $("#blockrssbindcontainer").append(html);
+                    }
+                    
                 });
                 $('body').on('click', '.RemoveBlockRssBindItem', function () {
-                    $(this).closest('.btn-group').remove();
+                    $(this).closest('.BlockRssBindItem').remove();
                 });
-            },
+                $('body').on('click', '#SaveBlockRssBind', function () {
+                    var BlockRssBind = [];
+                    $('#blockrssbindcontainer .BlockRssBindItem').each(function (i, v) {
+                        var CatIdBCodeRssId = $(this).attr('data-catidbcoderssid');
+                        var CategoryId = CatIdBCodeRssId.split('|')[0];
+                        var BlockCode = CatIdBCodeRssId.split('|')[1];
+                        var RssId = CatIdBCodeRssId.split('|')[2];
+                        BlockRssBind.push({ 'CategoryId': CategoryId, 'BlockCode': BlockCode, 'RssId': RssId });
+                    });
+
+                    $.ajax({
+                        method: "POST",
+                        url: "/api/ContentManager/EditBlockRssBind",
+                        data: {'_id':$('[name="_id"]').val(),'BlockRssBind':BlockRssBind}
+                    }).done(function (result) {
+                        if (result.ServiceResultStatus == 0) {
+                            alert(result.ServiceResultMassage);
+                            window.location = '/ContentManager/BlockRssBindManage';
+                        }
+                        if (result.ServiceResultStatus == 1) {
+                            alert(result.ServiceResultMassage);
+                        }
+                    });
+
+                });
+            }
             }
     },
     'BaseContent': {

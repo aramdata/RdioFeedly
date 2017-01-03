@@ -13,22 +13,20 @@
         <form class="form-horizontal">
             <input type="hidden" name="_id" value="@Model._id" />
             <div class="clearfix">
-
                 <div class="col-md-5">
                     <div class="form-group">
                         <label for="inputEmail3" class="control-label">گروه | جایگاه</label>
-                            <select class="form-control input-lg" name="categoryidblockcode" id="categoryidblockcode">
-                                @foreach (var category in Model.Categories)
+                        <select class="form-control input-lg" name="categoryidblockcode" id="categoryidblockcode">
+                            @foreach (var category in Model.Categories)
+                            {
+                                foreach (var block in category.blocks)
                                 {
-                                    foreach (var block in category.blocks)
-                                    {
-                                        <option @*@Html.isSelected(item._id == Model.parentId)*@ value='@string.Format("{0}|{1}",category._id,block.code)'>@string.Format("{0} | {1}", category.title, block.title)</option>
-                                    }
+                                    <option @*@Html.isSelected(item._id == Model.parentId)*@ value='@string.Format("{0}|{1}",category._id,block.code)'>@string.Format("{0} | {1}", category.title, block.title)</option>
                                 }
-                            </select>
+                            }
+                        </select>
                     </div>
                 </div>
-
                 <div class="col-md-7">
                     <label for="inputEmail3" class="control-label">Rss</label>
                     <div class="form-inline">
@@ -36,16 +34,19 @@
                             <select class="form-control input-lg" name="rssid" id="rssid">
                                 @foreach (var item in Model.Rss)
                                 {
-                                    <option value='@item._id'>@string.Format("{0} | {1}", item.siteid, item.title)</option>
+                                    <option value='@item._id'>@string.Format("{0} | {1}", Model.RssSitesName.FirstOrDefault(q => q.Item1 == item._id).Item2, item.title)</option>
                                 }
                             </select>
-                            <button type="button" id="addblockrssbind" class="btn btn-success btn-lg">افزودن به لیست</button>
+                            <button type="button" id="addblockrssbind" class="btn btn-warning btn-lg">افزودن به لیست</button>
                         </div>
                     </div>
                 </div>
-                </div>
-            <div class="clearfix" id="blockrssbindcontainer">
-
+            </div>
+            <hr/>
+            <div class="clearfix" id="blockrssbindcontainer"></div>
+            <hr />
+            <div class="clearfix">
+                <button type="button" id="SaveBlockRssBind" class="btn btn-success pull-left">ثبت</button>
             </div>
         </form>
     </div>
@@ -89,9 +90,9 @@
 
 
 <script id="blockrssbindtemplatemodel" type="text/x-handlebars-template">
-    <div class="btn-group">
-        <button type="button" class="btn btn-warning ">{{Title}}</button>
-        <button type="button" class="btn btn-warning RemoveBlockRssBindItem"><span class="fa fa-trash-o"></span></button>
+    <div class="btn-group BlockRssBindItem" data-CatIdBCodeRssId="{{CatIdBCodeRssId}}">
+        <button type="button" class="btn btn-default ">{{Title}}</button>
+        <button type="button" class="btn btn-default RemoveBlockRssBindItem"><span class="fa fa-trash-o"></span></button>
     </div>
 </script>
 <script>

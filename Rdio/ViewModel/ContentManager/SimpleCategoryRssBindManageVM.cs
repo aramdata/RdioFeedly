@@ -12,6 +12,6 @@ namespace Rdio.ViewModel.ContentManager
         public List<Rss> Rss { get; set; }
         public List<Category> Categories { get; set; }
         public string UserId { get; set; }
-
+        public List<Tuple<string, string>> RssSitesName { get; set; }
     }
 }
