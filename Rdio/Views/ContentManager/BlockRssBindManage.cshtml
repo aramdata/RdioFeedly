@@ -13,11 +13,11 @@
         <form class="form-horizontal">
             <input type="hidden" name="_id" value="@Model._id" />
             <div class="clearfix">
-                <div class="col-md-6">
+
+                <div class="col-md-5">
                     <div class="form-group">
-                        <label for="inputEmail3" class="col-sm-2 control-label">گروه | جایگاه</label>
-                        <div class="col-sm-10">
-                            <select class="form-control input-lg" name="parentid" id="parentid">
+                        <label for="inputEmail3" class="control-label">گروه | جایگاه</label>
+                            <select class="form-control input-lg" name="categoryidblockcode" id="categoryidblockcode">
                                 @foreach (var category in Model.Categories)
                                 {
                                     foreach (var block in category.blocks)
@@ -26,22 +26,26 @@
                                     }
                                 }
                             </select>
-                        </div>
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label for="inputEmail3" class="col-sm-2 control-label">Rss</label>
-                        <div class="col-sm-10">
-                            <select class="form-control input-lg" name="parentid" id="parentid">
+
+                <div class="col-md-7">
+                    <label for="inputEmail3" class="control-label">Rss</label>
+                    <div class="form-inline">
+                        <div class="form-group">
+                            <select class="form-control input-lg" name="rssid" id="rssid">
                                 @foreach (var item in Model.Rss)
                                 {
-                                    <option value='@item._id'>@item.title</option>
+                                    <option value='@item._id'>@string.Format("{0} | {1}", item.siteid, item.title)</option>
                                 }
                             </select>
+                            <button type="button" id="addblockrssbind" class="btn btn-success btn-lg">افزودن به لیست</button>
                         </div>
                     </div>
                 </div>
+                </div>
+            <div class="clearfix" id="blockrssbindcontainer">
+
             </div>
         </form>
     </div>
@@ -83,10 +87,17 @@
     </div>
 </script>
 
+
+<script id="blockrssbindtemplatemodel" type="text/x-handlebars-template">
+    <div class="btn-group">
+        <button type="button" class="btn btn-warning ">{{Title}}</button>
+        <button type="button" class="btn btn-warning RemoveBlockRssBindItem"><span class="fa fa-trash-o"></span></button>
+    </div>
+</script>
 <script>
     $(document).ready(function () {
-        Rdio.ContentManager.Event.RssManage();
-        Rdio.ContentManager.Event.EditRss();
+        Rdio.ContentManager.Event.BlockRssBindManager();
+        //Rdio.ContentManager.Event.EditRss();
     });
 </script>
 

@@ -9,5 +9,6 @@ namespace Rdio.Models.ContentManager
     {
         public string title { get; set; }
         public string code { get; set; }
+        public List<string> blockrssbind { get; set; }
     }
 }

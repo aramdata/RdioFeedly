@@ -323,7 +323,6 @@ Rdio = {
                     editmodel.type = $('#type').val();
                     editmodel.structure = [];
                     $('#TemplateStructures .contenttemplate:visible .form-group').each(function (i, v) {
-                        debugger;
                         var structurModel = {};//Rdio.ContentManager.EditTemplateStructureModel;}
                         structurModel.field = $(this).find("[data-field]").attr("data-field");
                         structurModel.query = $(this).find("[data-field]").val();
@@ -363,7 +362,6 @@ Rdio = {
                     editmodel.blocks = [];
 
                     $($('#blocks').val()).each(function (i, v) {
-                        debugger;
                         var blockModel = {};
                         blockModel.title = v.split('|')[0];
                         blockModel.code = v.split('|')[1];
@@ -385,7 +383,27 @@ Rdio = {
                     });
                 });
             },
-        }
+            'BlockRssBindManager': function () {
+
+                $('body').on('click', '#addblockrssbind', function () {
+                    var rssid = $('#rssid').val();
+                    var rssTitle = $('#rssid option:selected').text();
+
+                    var categoryid = $('#categoryidblockcode').val().split('|')[0];
+                    var blockCode = $('#categoryidblockcode').val().split('|')[1];
+                    var CategoryBlockTitle = $('#categoryidblockcode option:selected').text();
+
+                    var source = $("#blockrssbindtemplatemodel").html();
+                    var template = Handlebars.compile(source);
+                    var result = { 'Title': CategoryBlockTitle + ' -> ' + rssTitle };
+                    var html = template(result);
+                    $("#blockrssbindcontainer").append(html);
+                });
+                $('body').on('click', '.RemoveBlockRssBindItem', function () {
+                    $(this).closest('.btn-group').remove();
+                });
+            },
+            }
     },
     'BaseContent': {
         'BaseContentSearchModel': { 'page': 1, 'rssid': '', 'tags': '', 'categories': '', 'siteid': '' },
@@ -422,6 +440,7 @@ Rdio = {
             }
         }
     }
+    
 };
 $(document).ready(function () {
     handelbarfunchelperinit();
