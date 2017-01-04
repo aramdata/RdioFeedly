@@ -315,6 +315,25 @@ namespace Rdio.Repository
             return model;
 
         }
+        public async Task<bool> DeleteUserCategoriesBlocks()
+        {
+            try
+            {
+                var UserCategories = await GetUserCategories(Common.My.id);
+                var objectidArrayFormated = "[";
+                foreach (var item in UserCategories)
+                    objectidArrayFormated += string.Format("ObjectId('{0}'),", item._id);
+                objectidArrayFormated = objectidArrayFormated.Trim(',') + "]";
+
+                var res = await NoSql.Instance.RunCommandAsync<BsonDocument>("{update:'categories',updates:[{q:{_id:{$in:" + objectidArrayFormated + "}},u:{$set:{'blocks.$*.blockrssbind':[]}},upsert:false}]}");
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
+
         public async Task<bool> EditCategoryBlocks(string CategoryId,Models.ContentManager.Block block)
         {
             try

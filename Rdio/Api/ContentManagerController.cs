@@ -334,6 +334,9 @@ namespace Rdio.Api
         {
             try
             {
+                //Clean All Blocks Then Add BlockRssIdBind
+                var res = await ContentManagerRepository.DeleteUserCategoriesBlocks();
+
                 foreach (var CategoryGroup in model.BlockRssBind.GroupBy(q=>q.CategoryId))
                 {
                     foreach (var BlockCodeGroup in CategoryGroup.GroupBy(q=>q.BlockCode))
@@ -343,7 +346,7 @@ namespace Rdio.Api
                             code = BlockCodeGroup.FirstOrDefault().BlockCode,
                             blockrssbind = (from b in BlockCodeGroup select b.RssId).ToList()
                         };
-                        var res = await ContentManagerRepository.EditCategoryBlocks(BlockCodeGroup.FirstOrDefault().CategoryId, BlockModel);
+                        res = await ContentManagerRepository.EditCategoryBlocks(BlockCodeGroup.FirstOrDefault().CategoryId, BlockModel);
                     }
 
                 }

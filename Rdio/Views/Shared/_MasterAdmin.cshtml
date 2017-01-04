@@ -50,11 +50,27 @@
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav">
                     <li><a href="/">صفحه اصلی</a></li>
-                    <li><a href="@Url.Action("Manage","Content")">آخرین اخبار</a></li>
-
-                    <li><a href="@Url.Action("Manage","BaseContent")">آخرین اخبار2</a></li>
-                    <li><a href="@Url.Action("SiteManage","ContentManager")">مدیریت سایت</a></li>
-                    <li><a href="@Url.Action("EditSite","ContentManager")">افزودن سایت</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">مدیریت اخبار<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="@Url.Action("Manage","Content")">محتوای اخبار</a></li>
+                            <li><a href="@Url.Action("Manage","BaseContent")">لیست اخبار</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">سایت و محتوا<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="@Url.Action("SiteManage","ContentManager")">مدیریت سایت</a></li>
+                            <li><a href="@Url.Action("EditSite","ContentManager")">ثبت سایت</a></li>
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">مدیریت گروه بندی <span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="@Url.Action("CategoryManage","ContentManager")">ثبت گروه بندی</a></li>
+                            <li><a href="@Url.Action("BlockRssBindManage","ContentManager")">مدیریت ارتباط گروه و RSS</a></li>
+                        </ul>
+                    </li>
                     @*@if (User.Identity.IsAuthenticated)
                      {
                         <li>

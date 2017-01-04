@@ -43,7 +43,26 @@
                 </div>
             </div>
             <hr/>
-            <div class="clearfix" id="blockrssbindcontainer"></div>
+            <div class="clearfix" id="blockrssbindcontainer">
+                @foreach (var category in Model.Categories)
+                {
+                    foreach (var block in category.blocks)
+                    {
+                        if (block.blockrssbind != null)
+                        {
+                            foreach (var rssId in block.blockrssbind)
+                            {
+                                var CatIdBCodeRssId = string.Format("{0}|{1}|{2}", category._id, block.code, rssId);
+                                <div class="btn-group BlockRssBindItem" data-CatIdBCodeRssId="@CatIdBCodeRssId">
+                                    <button type="button" class="btn btn-default ">@string.Format("{0} | {1} -> {2} | {3}", category.title, block.title, Model.RssSitesName.FirstOrDefault(q => q.Item1 == rssId).Item2, Model.Rss.FirstOrDefault(q => q._id == rssId).title)</button>
+                                    <button type="button" class="btn btn-default RemoveBlockRssBindItem"><span class="fa fa-trash-o"></span></button>
+                                </div>
+                            }
+                        }
+
+                    }
+                }
+            </div>
             <hr />
             <div class="clearfix">
                 <button type="button" id="SaveBlockRssBind" class="btn btn-success pull-left">ثبت</button>
