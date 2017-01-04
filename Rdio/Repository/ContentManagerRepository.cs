@@ -319,7 +319,8 @@ namespace Rdio.Repository
         {
             try
             {
-                var res = await NoSql.Instance.RunCommandAsync<BsonDocument>("{update:'categories',updates:[{q:{_id:ObjectId('" + CategoryId + "'),blocks.code:'"+ block.code + "'},u:{$set:{blocks.$.blockrssbind:" + block.blockrssbind.toJSON() + "}},upsert:false}]}");
+                var res = await NoSql.Instance.RunCommandAsync<BsonDocument>("{update:'categories',updates:[{q:{_id:ObjectId('" + CategoryId + "'),'blocks.code':'" + block.code + "'},u:{$set:{'blocks.$.blockrssbind':" + block.blockrssbind.toJSON() + "}},upsert:false}]}");
+
                 return true;
             }
             catch (Exception ex)
