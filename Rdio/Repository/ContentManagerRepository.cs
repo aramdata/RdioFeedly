@@ -325,7 +325,7 @@ namespace Rdio.Repository
                     objectidArrayFormated += string.Format("ObjectId('{0}'),", item._id);
                 objectidArrayFormated = objectidArrayFormated.Trim(',') + "]";
 
-                var res = await NoSql.Instance.RunCommandAsync<BsonDocument>("{update:'categories',updates:[{q:{_id:{$in:" + objectidArrayFormated + "}},u:{$set:{'blocks.$*.blockrssbind':[]}},upsert:false}]}");
+                var res = await NoSql.Instance.RunCommandAsync<BsonDocument>("{update:'categories',updates:[{q:{_id:{$in:" + objectidArrayFormated + "}},u:{$set:{'blocks.$.blockrssbind':[]}},upsert:false}]}");
                 return true;
             }
             catch (Exception ex)

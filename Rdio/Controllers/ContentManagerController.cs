@@ -141,7 +141,9 @@ namespace Rdio.Controllers
         }
 
         public async Task<ActionResult> mohsen() {
-            var html=new List<string>()
+            var res = await ContentManagerRepository.DeleteUserCategoriesBlocks();
+
+            var html =new List<string>()
             {
                 @"<font color='#333333' size='1' face='tahoma'>کد خبر: 1383520/7&nbsp; زمان: 20:15 &nbsp;1395/10/09<!--/font><font color=white-->&nbsp;&nbsp;بازدید: <span id='visit'>8,992</span></font>",
                 @"<div class='news_nav col-xs-12 col-md-4 col-lg-5'>     	<span class='news_nav_title'>تاریخ انتشار: </span>۰۹ دی ۱۳۹۵ - ۱۸:۳۳     	</div>",
