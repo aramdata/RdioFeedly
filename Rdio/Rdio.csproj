@@ -490,6 +490,7 @@
     <Compile Include="Api\BaseContentController.cs" />
     <Compile Include="Api\ContentController.cs" />
     <Compile Include="Api\ContentManagerController.cs" />
+    <Compile Include="Api\UserBlogController.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
@@ -499,6 +500,7 @@
     <Compile Include="Controllers\ContentManagerController.cs" />
     <Compile Include="Controllers\CoreController.cs" />
     <Compile Include="Controllers\UserController.cs" />
+    <Compile Include="Domain\ServiceResult.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -529,6 +531,7 @@
     <Compile Include="Util\Common.cs" />
     <Compile Include="Util\ImageProccessor.cs" />
     <Compile Include="Util\StringEncoder.cs" />
+    <Compile Include="ViewModel\BaseApiVM.cs" />
     <Compile Include="ViewModel\BaseContent\BaseContentManageVM.cs" />
     <Compile Include="ViewModel\BaseContent\BaseContentManageServiceResult.cs" />
     <Compile Include="ViewModel\BaseContent\SimpleBaseContentManageVM.cs" />
@@ -549,6 +552,8 @@
     <Compile Include="ViewModel\Content\SimpleContentManageVM.cs" />
     <Compile Include="ViewModel\Pagination.cs" />
     <Compile Include="ViewModel\ServiceResult.cs" />
+    <Compile Include="ViewModel\UserBlog\GetBlockNewsVM.cs" />
+    <Compile Include="ViewModel\UserBlog\GetCategoriesVM.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\web.config" />

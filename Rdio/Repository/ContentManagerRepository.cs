@@ -245,22 +245,6 @@ namespace Rdio.Repository
                 return false;
             }
         }
-        //public async Task<Models.Crawl.CrawlTemplate> CrawlTemplate(string siteid)
-        //{
-        //    var model = new Models.Crawl.CrawlTemplate();
-
-        //    try
-        //    {
-        //        var _model = await NoSql.Instance.RunCommandAsync<BsonDocument>("{aggregate:'sites',pipeline:[{$match:{_id:ObjectId('" + siteid + "')}},{$limit:1}]}");
-        //        if (_model.GetValue("result").AsBsonArray.Any())
-        //            model = MongoDB.Bson.Serialization.BsonSerializer.Deserialize<Models.Crawl.CrawlTemplate>(_model.GetValue("result")[0].AsBsonDocument);
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //    }
-        //    return model;
-
-        //}
         public async Task<List<Models.ContentManager.Category>> GetUserCategories(string id)
         {
             var model = new List<Models.ContentManager.Category>();
@@ -320,20 +304,29 @@ namespace Rdio.Repository
             try
             {
                 var UserCategories = await GetUserCategories(Common.My.id);
-                var objectidArrayFormated = "[";
-                foreach (var item in UserCategories)
-                    objectidArrayFormated += string.Format("ObjectId('{0}'),", item._id);
-                objectidArrayFormated = objectidArrayFormated.Trim(',') + "]";
 
-                var res = await NoSql.Instance.RunCommandAsync<BsonDocument>("{update:'categories',updates:[{q:{_id:{$in:" + objectidArrayFormated + "}},u:{$set:{'blocks.$.blockrssbind':[]}},upsert:false}]}");
+
+                foreach (var category in UserCategories)
+                {
+                    var blockIndex = 0;
+                    foreach (var block in category.blocks)
+                    {
+                        var res = await NoSql.Instance.RunCommandAsync<BsonDocument>("{update:'categories',updates:[{q:{_id:ObjectId('"+ category ._id+ "')},u:{$set:{'blocks."+ blockIndex+ ".blockrssbind':[]}},upsert:false}]}");
+                        blockIndex++;
+                    }
+                }
                 return true;
+                //var objectidArrayFormated = "[";
+                //foreach (var item in UserCategories)
+                //    objectidArrayFormated += string.Format("ObjectId('{0}'),", item._id);
+                //objectidArrayFormated = objectidArrayFormated.Trim(',') + "]";
+                //var res = await NoSql.Instance.RunCommandAsync<BsonDocument>("{update:'categories',updates:[{q:{_id:{$in:" + objectidArrayFormated + "}},u:{$set:{'blocks.$.blockrssbind':[]}},upsert:false}]}");
             }
             catch (Exception ex)
             {
                 return false;
             }
         }
-
         public async Task<bool> EditCategoryBlocks(string CategoryId,Models.ContentManager.Block block)
         {
             try
@@ -346,6 +339,23 @@ namespace Rdio.Repository
             {
                 return false;
             }
+        }
+        public async Task<List<string>> GetBlockRssIds(string CategoryId,string BlockCode)
+        {
+            var model = new List<string>();
+            try
+            {
+                var _model = await NoSql.Instance.RunCommandAsync<BsonDocument>("{aggregate:'categories',pipeline:[{$match:{_id:ObjectId('" + CategoryId + "'),blocks.code:'"+BlockCode+ "'}},{$limit:1},{ $project : { _id: 0, blocks.$ : 1} },{ $project : {'blocks.$$':1} }]}");
+                if (_model.GetValue("result").AsBsonArray.Any())
+                    foreach (var item in _model.GetValue("result").AsBsonArray)
+                        model.Add(MongoDB.Bson.Serialization.BsonSerializer.Deserialize<string>(item.AsBsonDocument));
+
+            }
+            catch (Exception ex)
+            {
+            }
+            return model;
+
         }
 
     }

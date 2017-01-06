@@ -59,5 +59,23 @@ namespace Rdio.Repository
                 return false;
             }
         }
+
+        public async Task<IEnumerable<Models.Content.NewsContent>> GetBlockContent(List<string> RssId,int Count)
+        {
+            var model = new List<Models.Content.NewsContent>();
+
+            try
+            {
+                var _model = await NoSql.Instance.RunCommandAsync<BsonDocument>("{aggregate:'content',pipeline:[{$match:{'rssid':{$in:"+RssId.toJSON()+"}}},{$limit:"+ Count + "}]}");
+                if (_model.GetValue("result").AsBsonArray.Any())
+                    foreach (var item in _model.GetValue("result").AsBsonArray)
+                        model.Add(MongoDB.Bson.Serialization.BsonSerializer.Deserialize<Models.Content.NewsContent>(item.AsBsonDocument));
+            }
+            catch (Exception ex)
+            {
+            }
+            return model;
+        }
+
     }
 }
