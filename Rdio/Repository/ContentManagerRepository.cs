@@ -262,6 +262,24 @@ namespace Rdio.Repository
             return model;
 
         }
+        public async Task<List<Models.ContentManager.Category>> GetSystemAllCategories()
+        {
+            var model = new List<Models.ContentManager.Category>();
+            try
+            {
+                var _model = await NoSql.Instance.RunCommandAsync<BsonDocument>("{aggregate:'categories',pipeline:[{$match:{}}]}");
+                if (_model.GetValue("result").AsBsonArray.Any())
+                    foreach (var item in _model.GetValue("result").AsBsonArray)
+                        model.Add(MongoDB.Bson.Serialization.BsonSerializer.Deserialize<Models.ContentManager.Category>(item.AsBsonDocument));
+
+            }
+            catch (Exception ex)
+            {
+            }
+            return model;
+
+        }
+
         public async Task<bool> EditCategory(Models.ContentManager.Category model)
         {
             try
@@ -343,17 +361,24 @@ namespace Rdio.Repository
         public async Task<List<string>> GetBlockRssIds(string CategoryId,string BlockCode)
         {
             var model = new List<string>();
-            try
-            {
-                var _model = await NoSql.Instance.RunCommandAsync<BsonDocument>("{aggregate:'categories',pipeline:[{$match:{_id:ObjectId('" + CategoryId + "'),blocks.code:'"+BlockCode+ "'}},{$limit:1},{ $project : { _id: 0, blocks.$ : 1} },{ $project : {'blocks.$$':1} }]}");
-                if (_model.GetValue("result").AsBsonArray.Any())
-                    foreach (var item in _model.GetValue("result").AsBsonArray)
-                        model.Add(MongoDB.Bson.Serialization.BsonSerializer.Deserialize<string>(item.AsBsonDocument));
 
-            }
-            catch (Exception ex)
-            {
-            }
+            //TODO : soloution to Get Category ?? GetSystemAllCategories Or Query to db
+            var Categories = await GetSystemAllCategories();
+            var result = Categories.FirstOrDefault(q => q._id == CategoryId && q.blocks.Any(x => x.code == BlockCode));
+            if (result != null)
+                foreach (var block in result.blocks)
+                    model.AddRange(block.blockrssbind);
+            //try
+            //{
+            //    var _model = await NoSql.Instance.RunCommandAsync<BsonDocument>("{aggregate:'categories',pipeline:[{$match:{_id:ObjectId('" + CategoryId + "'),blocks.code:'"+BlockCode+ "'}},{$limit:1},{ $project : { _id: 0, blocks.$ : 1} },{ $project : {'blocks.$$':1} }]}");
+            //    if (_model.GetValue("result").AsBsonArray.Any())
+            //        foreach (var item in _model.GetValue("result").AsBsonArray)
+            //            model.Add(MongoDB.Bson.Serialization.BsonSerializer.Deserialize<string>(item.AsBsonDocument));
+
+            //}
+            //catch (Exception ex)
+            //{
+            //}
             return model;
 
         }
