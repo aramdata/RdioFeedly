@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Http;
 using Rdio.Domain;
+using Rdio.Models.Content;
 using Rdio.Models.ContentManager;
 using Rdio.Repository;
 
@@ -45,10 +46,43 @@ namespace Rdio.Api
         {
             try
             {
-                var res = await ContentRepository.GetBlockContent(await (ContentManagerRepository.GetBlockRssIds(model.CategoryId, model.BlockCode)),model.Count);
+                IEnumerable<Models.Content.NewsContent> res = new List<Models.Content.NewsContent>();
+
+                //Block Of Category News
+                if (!string.IsNullOrWhiteSpace(model.BlockCode))
+                    res = await ContentRepository.GetBlockContent(await (ContentManagerRepository.GetBlockRssIds(model.CategoryId, model.BlockCode)), model.Count);
+
+                //Categories News
+                if(string.IsNullOrWhiteSpace(model.BlockCode))
+                    res = await ContentRepository.GetBlockContent(await (ContentManagerRepository.GetCategoryRssIds(model.CategoryId)), model.Count);
+
                 return new ServiceResult<Models.Content.NewsContent>
                 {
                     Data = res,
+                    ServiceResultStatus = (int)Rdio.Util.Common.ServiceResultStatus.OK,
+                    ServiceResultMassage = Util.Common.ServiceResultMessage.OKMessage.ToString()
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ServiceResult<Models.Content.NewsContent>
+                {
+                    Data = null,
+                    ServiceResultStatus = (int)Rdio.Util.Common.ServiceResultStatus.Error,
+                    ServiceResultMassage = ex.GetBaseException().Message
+                };
+            }
+        }
+
+        [Route("api/UserBlog/GetNewsInfo")]
+        public async Task<ServiceResult<Models.Content.NewsContent>> GetNewsInfo([FromUri]ViewModel.UserBlog.GetNewsInfo model)
+        {
+            try
+            {
+                var res = await ContentRepository.ContentInfo(model.ContentId);
+                return new ServiceResult<Models.Content.NewsContent>
+                {
+                    Data = new List<NewsContent> { res },
                     ServiceResultStatus = (int)Rdio.Util.Common.ServiceResultStatus.OK,
                     ServiceResultMassage = Util.Common.ServiceResultMessage.OKMessage.ToString()
                 };

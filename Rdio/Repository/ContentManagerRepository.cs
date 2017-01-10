@@ -364,21 +364,20 @@ namespace Rdio.Repository
 
             //TODO : soloution to Get Category ?? GetSystemAllCategories Or Query to db
             var Categories = await GetSystemAllCategories();
-            var result = Categories.FirstOrDefault(q => q._id == CategoryId && q.blocks.Any(x => x.code == BlockCode));
-            if (result != null)
-                foreach (var block in result.blocks)
-                    model.AddRange(block.blockrssbind);
-            //try
-            //{
-            //    var _model = await NoSql.Instance.RunCommandAsync<BsonDocument>("{aggregate:'categories',pipeline:[{$match:{_id:ObjectId('" + CategoryId + "'),blocks.code:'"+BlockCode+ "'}},{$limit:1},{ $project : { _id: 0, blocks.$ : 1} },{ $project : {'blocks.$$':1} }]}");
-            //    if (_model.GetValue("result").AsBsonArray.Any())
-            //        foreach (var item in _model.GetValue("result").AsBsonArray)
-            //            model.Add(MongoDB.Bson.Serialization.BsonSerializer.Deserialize<string>(item.AsBsonDocument));
+            var result = Categories.FirstOrDefault(q => q._id == CategoryId).blocks.FirstOrDefault(q => q.code == BlockCode);
+            model.AddRange(result.blockrssbind);
+            return model;
 
-            //}
-            //catch (Exception ex)
-            //{
-            //}
+        }
+        public async Task<List<string>> GetCategoryRssIds(string CategoryId)
+        {
+            var model = new List<string>();
+
+            //TODO : soloution to Get Category ?? GetSystemAllCategories Or Query to db
+            var Categories = await GetSystemAllCategories();
+            var blocks = Categories.FirstOrDefault(q => q._id == CategoryId).blocks;
+            foreach (var block in blocks)
+                model.AddRange(block.blockrssbind);
             return model;
 
         }

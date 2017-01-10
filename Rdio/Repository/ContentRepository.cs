@@ -66,7 +66,7 @@ namespace Rdio.Repository
 
             try
             {
-                var _model = await NoSql.Instance.RunCommandAsync<BsonDocument>("{aggregate:'content',pipeline:[{$match:{'rssid':{$in:"+RssId.toJSON()+"}}},{$limit:"+ Count + "}]}");
+                var _model = await NoSql.Instance.RunCommandAsync<BsonDocument>("{aggregate:'content',pipeline:[{$match:{'rssid':{$in:"+RssId.toJSON()+ "}}},{$sort : { 'createdateticks' : -1  }},{$limit:" + Count + "}]}");
                 if (_model.GetValue("result").AsBsonArray.Any())
                     foreach (var item in _model.GetValue("result").AsBsonArray)
                         model.Add(MongoDB.Bson.Serialization.BsonSerializer.Deserialize<Models.Content.NewsContent>(item.AsBsonDocument));

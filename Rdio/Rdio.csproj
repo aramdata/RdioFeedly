@@ -554,6 +554,7 @@
     <Compile Include="ViewModel\ServiceResult.cs" />
     <Compile Include="ViewModel\UserBlog\GetBlockNewsVM.cs" />
     <Compile Include="ViewModel\UserBlog\GetCategoriesVM.cs" />
+    <Compile Include="ViewModel\UserBlog\GetNewsInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Views\web.config" />
