@@ -11,6 +11,7 @@ namespace Rdio.Controllers
     public class ContentManagerController : Controller
     {
         Repository.ContentManagerRepository ContentManagerRepository = new Repository.ContentManagerRepository();
+        Service.LequeService LequeService = new Service.LequeService();
 
         [Authorize]
         public async Task<ActionResult> EditSite(string id)
@@ -140,7 +141,8 @@ namespace Rdio.Controllers
             return View(model);
         }
 
-        public async Task<ActionResult> mohsen() {
+        public async Task<ActionResult> mohsen(int id) {
+            var m=await LequeService.GetFootbalLegue(id);
             var res = await ContentManagerRepository.DeleteUserCategoriesBlocks();
 
             var html =new List<string>()

@@ -16,6 +16,7 @@ namespace Rdio.Api
     {
         Repository.ContentManagerRepository ContentManagerRepository = new Repository.ContentManagerRepository();
         Repository.ContentRepository ContentRepository = new Repository.ContentRepository();
+        Service.LequeService LequeService = new Service.LequeService();
 
         [Route("api/UserBlog/GetCategories")]
         public async Task<ServiceResult<Models.ContentManager.Category>> GetCategories([FromUri]ViewModel.UserBlog.GetCategoriesVM model)
@@ -90,6 +91,30 @@ namespace Rdio.Api
             catch (Exception ex)
             {
                 return new ServiceResult<Models.Content.NewsContent>
+                {
+                    Data = null,
+                    ServiceResultStatus = (int)Rdio.Util.Common.ServiceResultStatus.Error,
+                    ServiceResultMassage = ex.GetBaseException().Message
+                };
+            }
+        }
+
+        [Route("api/UserBlog/GetFootbalLegue")]
+        public async Task<ServiceResult<Models.Legue.Varzesh3Legue>> GetFootbalLegue([FromUri]ViewModel.UserBlog.GetFootbalLegueVM model)
+        {
+            try
+            {
+                var res = await LequeService.GetFootbalLegue(model.FootbalLegueId);
+                return new ServiceResult<Models.Legue.Varzesh3Legue>
+                {
+                    Data = new List<Models.Legue.Varzesh3Legue> { res },
+                    ServiceResultStatus = (int)Rdio.Util.Common.ServiceResultStatus.OK,
+                    ServiceResultMassage = Util.Common.ServiceResultMessage.OKMessage.ToString()
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ServiceResult<Models.Legue.Varzesh3Legue>
                 {
                     Data = null,
                     ServiceResultStatus = (int)Rdio.Util.Common.ServiceResultStatus.Error,

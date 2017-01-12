@@ -514,6 +514,9 @@
     <Compile Include="Models\Content\NewsContent.cs" />
     <Compile Include="Models\Crawl\CrawlStructur.cs" />
     <Compile Include="Models\Crawl\CrawlTemplate.cs" />
+    <Compile Include="Models\Legue\Varzesh3Legue.cs" />
+    <Compile Include="Models\Legue\Varzesh3Table.cs" />
+    <Compile Include="Models\Legue\Varzesh3Widget.cs" />
     <Compile Include="Models\NoSql.cs" />
     <Compile Include="Models\QueueLog.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -522,6 +525,7 @@
     <Compile Include="Repository\ContentManagerRepository.cs" />
     <Compile Include="Service\CacheService.cs" />
     <Compile Include="Service\CrawlerService.cs" />
+    <Compile Include="Service\LequeService.cs" />
     <Compile Include="Service\RssService.cs" />
     <Compile Include="Service\SchedulerService.cs" />
     <Compile Include="Service\ContentManagerService.cs" />
@@ -552,6 +556,7 @@
     <Compile Include="ViewModel\Content\SimpleContentManageVM.cs" />
     <Compile Include="ViewModel\Pagination.cs" />
     <Compile Include="ViewModel\ServiceResult.cs" />
+    <Compile Include="ViewModel\UserBlog\GetFootbalLegueVM.cs" />
     <Compile Include="ViewModel\UserBlog\GetBlockNewsVM.cs" />
     <Compile Include="ViewModel\UserBlog\GetCategoriesVM.cs" />
     <Compile Include="ViewModel\UserBlog\GetNewsInfo.cs" />
