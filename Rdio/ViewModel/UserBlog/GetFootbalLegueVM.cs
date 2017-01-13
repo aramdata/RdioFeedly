@@ -7,6 +7,6 @@ namespace Rdio.ViewModel.UserBlog
 {
     public class GetFootbalLegueVM : BaseApiVM
     {
-        public int FootbalLegueId { get; set; }
+        public string FootbalLegueId { get; set; }
     }
 }

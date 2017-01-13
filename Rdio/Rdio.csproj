@@ -514,7 +514,9 @@
     <Compile Include="Models\Content\NewsContent.cs" />
     <Compile Include="Models\Crawl\CrawlStructur.cs" />
     <Compile Include="Models\Crawl\CrawlTemplate.cs" />
+    <Compile Include="Models\Legue\Varzesh3LegueFixture.cs" />
     <Compile Include="Models\Legue\Varzesh3Legue.cs" />
+    <Compile Include="Models\Legue\Varzesh3Fixture.cs" />
     <Compile Include="Models\Legue\Varzesh3Table.cs" />
     <Compile Include="Models\Legue\Varzesh3Widget.cs" />
     <Compile Include="Models\NoSql.cs" />

@@ -15,7 +15,7 @@ namespace Rdio
 
             //Must Manual Create Database In SQL Server
             //GlobalConfiguration.Configuration.UseSqlServerStorage("HangFireDB");
-            GlobalConfiguration.Configuration.UseMongoStorage("mongodb://localhost:27017", "rdiofeedly");
+            GlobalConfiguration.Configuration.UseMongoStorage("mongodb://localhost:27017", "rdiofeedlyhangfire");
 
             app.UseHangfireServer();
             app.UseHangfireDashboard();
