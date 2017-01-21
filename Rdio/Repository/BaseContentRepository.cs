@@ -21,7 +21,7 @@ namespace Rdio.Repository
                 {
                     var isReapeated = await rssService.IsRepeatedUrl(item.url);
                     if (!isReapeated)
-                        BsonDocumentList.Add(new BsonDocument() { { "title", item.title }, { "url", item.url }, { "description", item.description }, { "rssid", item.rssid }, { "userid", item.userid }, { "insertdateticks", item.insertdateticks }, { "dateticks", item.dateticks } , { "iscrawled",false } });
+                        BsonDocumentList.Add(new BsonDocument() { { "title", item.title }, { "url", item.url }, { "description", item.description }, { "rssid", item.rssid }, { "userid", item.userid }, { "insertdateticks", item.insertdateticks }, { "dateticks", item.dateticks } , { "iscrawled",false }, { "bycrawled", item.bycrawled } });
                 }
                     
                 var collection = NoSql.Instance.GetCollection<BsonDocument>("basecontent");

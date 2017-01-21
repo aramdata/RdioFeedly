@@ -20,6 +20,7 @@ namespace Rdio.Models.BaseContent
         public long dateticks { get; set; }
         public long insertdateticks { get; set; }
         public bool iscrawled { get; set; }
+        public bool bycrawled { get; set; }
 
     }
 }

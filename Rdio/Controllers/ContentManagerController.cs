@@ -12,6 +12,7 @@ namespace Rdio.Controllers
     {
         Repository.ContentManagerRepository ContentManagerRepository = new Repository.ContentManagerRepository();
         Service.LequeService LequeService = new Service.LequeService();
+        Service.CrawlerService CrawlerService = new Service.CrawlerService();
 
         [Authorize]
         public async Task<ActionResult> EditSite(string id)
@@ -142,30 +143,31 @@ namespace Rdio.Controllers
         }
 
         public async Task<ActionResult> mohsen(int id) {
-            var m=await LequeService.GetFootbalLegue(id);
-            var res = await ContentManagerRepository.DeleteUserCategoriesBlocks();
+            var mm = await CrawlerService.CrawlLinkManager();
+            //var m=await LequeService.GetFootbalLegue(id);
+            //var res = await ContentManagerRepository.DeleteUserCategoriesBlocks();
 
-            var html =new List<string>()
-            {
-                @"<font color='#333333' size='1' face='tahoma'>کد خبر: 1383520/7&nbsp; زمان: 20:15 &nbsp;1395/10/09<!--/font><font color=white-->&nbsp;&nbsp;بازدید: <span id='visit'>8,992</span></font>",
-                @"<div class='news_nav col-xs-12 col-md-4 col-lg-5'>     	<span class='news_nav_title'>تاریخ انتشار: </span>۰۹ دی ۱۳۹۵ - ۱۸:۳۳     	</div>",
-                @"<span class='margin-l-md'>پنجشنبه 9 دی 1395 - 12:45:29</span>",
-                @"<span class='oliveDate'>1395/10/08</span>",
-                @"<span class='oliveDate' style='float:left'>۱۳۹۵/۱۰/۰۶</span>",
-                @"<time><i class='fa fa-clock - o'></i> ۰۹ دی ۱۳۹۵ - ۱۳:۱۴ </time>",
-                @"<time datetime='2016 - 12 - 29T16: 31:55 + 00:00' itemprop='datePublished'>Dec 29, 2016 16:31:55</time>",
-                @"<h5>پنجشنبه، ۹ دی ۱۳۹۵، ساعت ۱۸:۵۰  — تسنیم</h5>",
-                @"<time itemprop='dateModified' datetime='2016 - 12 - 29T14: 55:13Z'>29 Dec 2016</time>",
-                @"<div class='created'>پنجشنبه 9 دى 1395 ساعت 19:48 < span > 2016 - 12 - 29 19:48:23 </ span ></ div >" ,
-                @"<div id='docDiv3Date'>تاریخ انتشار : <span>پنجشنبه ۹ دی ۱۳۹۵ ساعت ۱۹:۵۸</span></div>",
-                @"<div class='news_nav news_pdate_c'> 					<span class='news_title'>تاریخ انتشار: </span> 					<sapn class='fa_date'>۰۹ دی ۱۳۹۵ - ۰۰:۴۲</sapn> 					<span class='en_date visible-lg visible - md'> 						29 December 2016 					</span> 				</div>",
-                @"<span class='timestamp'>Thu Dec 29, 2016 | 12:30pm EST</span>",
-                @"<div class='news_nav news_pdate_c'>۰۹ دی ۱۳۹۵ - ۱۵:۱۶</div>",
-            };
-            foreach (var item in html)
-            {
-                Util.Common.ParsDateFromHtml(item);
-            }
+            //var html =new List<string>()
+            //{
+            //    @"<font color='#333333' size='1' face='tahoma'>کد خبر: 1383520/7&nbsp; زمان: 20:15 &nbsp;1395/10/09<!--/font><font color=white-->&nbsp;&nbsp;بازدید: <span id='visit'>8,992</span></font>",
+            //    @"<div class='news_nav col-xs-12 col-md-4 col-lg-5'>     	<span class='news_nav_title'>تاریخ انتشار: </span>۰۹ دی ۱۳۹۵ - ۱۸:۳۳     	</div>",
+            //    @"<span class='margin-l-md'>پنجشنبه 9 دی 1395 - 12:45:29</span>",
+            //    @"<span class='oliveDate'>1395/10/08</span>",
+            //    @"<span class='oliveDate' style='float:left'>۱۳۹۵/۱۰/۰۶</span>",
+            //    @"<time><i class='fa fa-clock - o'></i> ۰۹ دی ۱۳۹۵ - ۱۳:۱۴ </time>",
+            //    @"<time datetime='2016 - 12 - 29T16: 31:55 + 00:00' itemprop='datePublished'>Dec 29, 2016 16:31:55</time>",
+            //    @"<h5>پنجشنبه، ۹ دی ۱۳۹۵، ساعت ۱۸:۵۰  — تسنیم</h5>",
+            //    @"<time itemprop='dateModified' datetime='2016 - 12 - 29T14: 55:13Z'>29 Dec 2016</time>",
+            //    @"<div class='created'>پنجشنبه 9 دى 1395 ساعت 19:48 < span > 2016 - 12 - 29 19:48:23 </ span ></ div >" ,
+            //    @"<div id='docDiv3Date'>تاریخ انتشار : <span>پنجشنبه ۹ دی ۱۳۹۵ ساعت ۱۹:۵۸</span></div>",
+            //    @"<div class='news_nav news_pdate_c'> 					<span class='news_title'>تاریخ انتشار: </span> 					<sapn class='fa_date'>۰۹ دی ۱۳۹۵ - ۰۰:۴۲</sapn> 					<span class='en_date visible-lg visible - md'> 						29 December 2016 					</span> 				</div>",
+            //    @"<span class='timestamp'>Thu Dec 29, 2016 | 12:30pm EST</span>",
+            //    @"<div class='news_nav news_pdate_c'>۰۹ دی ۱۳۹۵ - ۱۵:۱۶</div>",
+            //};
+            //foreach (var item in html)
+            //{
+            //    Util.Common.ParsDateFromHtml(item);
+            //}
             //var rs = new Service.RssService();
             //var res=await rs.RssFetcherManager();
             return Content("Salam - ");

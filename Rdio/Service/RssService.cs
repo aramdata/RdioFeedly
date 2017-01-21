@@ -41,7 +41,8 @@ namespace Rdio.Service
                                     rssid = item._id,
                                     title = rss.title,
                                     url = rss.url,
-                                    userid = item.userid
+                                    userid = item.userid,
+                                    bycrawled=false
                                 });
                         }
                     }

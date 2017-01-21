@@ -16,6 +16,97 @@ namespace Rdio.Service
         Repository.BaseContentRepository baseContentRepository = new Repository.BaseContentRepository();
         Service.CacheService cacheService = new CacheService();
 
+        public async Task<bool> CrawlLinkManager()
+        {
+            if (!IsInProccess())
+            {
+                try
+                {
+                    SetScheduleInProccess(SchedulerStat.inProccess);
+                    Repository.ContentManagerRepository ContentManagerRepository = new Repository.ContentManagerRepository();
+                    Repository.BaseContentRepository BaseContentRepository = new Repository.BaseContentRepository();
+                    var SuccessList = new List<Models.ContentManager.Site>();
+                    var BaseContentList = new List<Models.BaseContent.BaseContent>();
+                    var deque = await ContentManagerRepository.DequeSite(10);
+                    foreach (var item in deque)
+                    {
+                        var rssModel = (await ContentManagerRepository.GetSiteAllRss(item._id)).FirstOrDefault(q=>string.IsNullOrEmpty(q.url));
+                        var res = await CrawlerLink(item);
+                        if (res != null)
+                        {
+                            SuccessList.Add(item);
+                            foreach (var rss in res)
+                                BaseContentList.Add(new Models.BaseContent.BaseContent()
+                                {
+                                    dateticks = rss.dateticks,
+                                    description = rss.description,
+                                    insertdateticks = DateTime.Now.Ticks,
+                                    rssid = rssModel!=null ? rssModel._id: "",
+                                    title = rss.title,
+                                    url = rss.url,
+                                    userid = item.userid,
+                                    bycrawled=true
+                                });
+                        }
+                    }
+                    
+                    //TODO: Resolve concarrency problem insert repeated if waite for preve task 
+                    var addRes = await BaseContentRepository.Add(BaseContentList);
+                    var changeRes = await ContentManagerRepository.ChangeLastCarawlDateSite(SuccessList);
+                    var AddToRedisRes = await BaseContentRepository.AddRssURlInRedis(BaseContentList);
+
+                    SetScheduleInProccess(SchedulerStat.idle);
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    SetScheduleInProccess(SchedulerStat.idle);
+                    return false;
+                }
+            }
+
+            return false;
+        }
+        public async Task<List<Models.BaseRssItem>> CrawlerLink(Models.ContentManager.Site model)
+        {
+            try
+            {
+                string htmlContent = "";
+                var uri = new Uri(model.url);
+                using (var client = new HttpClient())
+                {
+                    client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:50.0) Gecko/20100101 Firefox/50.0");
+                    client.DefaultRequestHeaders.Add("Host", uri.Authority);
+                    using (var r = await client.GetAsync(uri))
+                    {
+                        htmlContent = await r.Content.ReadAsStringAsync();
+                    }
+                }
+                var parser = new HtmlParser();
+                var document = parser.Parse(htmlContent);
+
+                var allLink = document.QuerySelectorAll("a").Where(q=>q.Attributes.Where(x=>x.Name=="href").Any(x=>x.Value.Contains(model.url)));
+                var res = new List<Models.BaseRssItem>();
+
+                foreach (var item in allLink)
+                {
+                    string title = item.TextContent;
+                    string link = item.GetAttribute("href");
+                    string description = "";
+                    var datetime = DateTime.Now;
+                    if(!string.IsNullOrEmpty(title))
+                        res.Add(new Models.BaseRssItem() { title = title, url = link, description = description, dateticks = datetime.Ticks });
+                }
+                return res;
+            }
+            catch (Exception e)
+            {
+                return null;
+            }
+
+        }
+
+
         public async Task<bool> CrawlManager()
         {
             if (!IsInProccess())

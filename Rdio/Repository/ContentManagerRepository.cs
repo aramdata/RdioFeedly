@@ -381,6 +381,50 @@ namespace Rdio.Repository
             return model;
 
         }
+        public async Task<List<Models.ContentManager.Site>> DequeSite(int count)
+        {
+            var model = new List<Models.ContentManager.Site>();
+            try
+            {
+                //var _model = await NoSql.Instance.RunCommandAsync<BsonDocument>("{aggregate:'sites',pipeline:[{$match:{lastcrawldate:{$lt:" + DateTime.Now.Ticks + "}}},{$sort : {'_id' : -1 }},{$limit:" + count + "}]}");
+                var _model = await NoSql.Instance.RunCommandAsync<BsonDocument>("{aggregate:'sites',pipeline:[{$match:{}},{$sort : {'_id' : -1 }},{$limit:" + count + "}]}");
+
+                if (_model.GetValue("result").AsBsonArray.Any())
+                    foreach (var item in _model.GetValue("result").AsBsonArray)
+                        model.Add(MongoDB.Bson.Serialization.BsonSerializer.Deserialize<Models.ContentManager.Site>(item.AsBsonDocument));
+            }
+            catch (Exception ex)
+            {
+            }
+            return model;
+
+        }
+        public async Task<bool> ChangeLastCarawlDateSite(List<Models.ContentManager.Site> model)
+        {
+            try
+            {
+                ObjectId[] objarray = new ObjectId[model.Count];
+                var objectidArrayFormated = "[";
+                foreach (var item in model)
+                    objectidArrayFormated += string.Format("ObjectId('{0}'),", item._id);
+                objectidArrayFormated = objectidArrayFormated.Trim(',') + "]";
+                var d = await NoSql.Instance.RunCommandAsync<BsonDocument>("{update:'sites',updates:[{q:{_id:{$in:" + objectidArrayFormated + "}},u:{$set:{'lastcrawldate':NumberLong(" + DateTime.Now.Ticks + ")}},upsert:false,multi:true}]}");
+
+
+                //var collection = NoSql.Instance.GetCollection<BsonDocument>("rss");
+                //var update = Builders<BsonDocument>.Update.Set("lastcrawldate", DateTime.Now.Ticks);
+                //await collection.UpdateManyAsync(;
+                //var _model = await NoSql.Instance.RunCommandAsync<BsonDocument>("{aggregate:'rss',pipeline:[{$match:{lastcrawldate:{$lt:" + DateTime.Now.Ticks + "}}},{$sort : {'_id' : -1 }},{$limit:" + count + "}]}");
+                //if (_model.GetValue("result").AsBsonArray.Any())
+                //    foreach (var item in _model.GetValue("result").AsBsonArray)
+                //        model.Add(MongoDB.Bson.Serialization.BsonSerializer.Deserialize<Models.ContentManager.Rss>(item.AsBsonDocument));
+                return true;
+            }
+            catch (Exception ex)
+            {
+                return false;
+            }
+        }
 
     }
 }
