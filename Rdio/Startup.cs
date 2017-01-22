@@ -22,11 +22,13 @@ namespace Rdio
             ConfigureAuth(app);
 
             var rssService = new Service.RssService();
-            RecurringJob.AddOrUpdate(() => rssService.RssFetcherManager(), Cron.MinuteInterval(1));
+            RecurringJob.AddOrUpdate(() => rssService.RssFetcherManager(), Cron.MinuteInterval(5));
 
             var crawlService=new Service.CrawlerService();
-            RecurringJob.AddOrUpdate(() => crawlService.CrawlManager(), Cron.MinuteInterval(1));
+            RecurringJob.AddOrUpdate(() => crawlService.CrawlManager(), Cron.MinuteInterval(5));
 
+            var crawlLinkService = new Service.CrawlerService();
+            RecurringJob.AddOrUpdate(() => crawlLinkService.CrawlLinkManager(), Cron.MinuteInterval(5));
         }
     }
 }

@@ -25,25 +25,28 @@ namespace Rdio.Service
                     Repository.BaseContentRepository BaseContentRepository = new Repository.BaseContentRepository();
                     var SuccessList = new List<Models.ContentManager.Rss>();
                     var BaseContentList = new List<Models.BaseContent.BaseContent>();
-                    var deque = await ContentManagerRepository.DequeRss(10);
+                    var deque = await ContentManagerRepository.DequeRss(50);
                     foreach (var item in deque)
                     {
-                        var res = await RssFetcher(item.url);
-                        if (res != null)
+                        if (!string.IsNullOrWhiteSpace(item.url))
                         {
-                            SuccessList.Add(item);
-                            foreach (var rss in res)
-                                BaseContentList.Add(new Models.BaseContent.BaseContent()
-                                {
-                                    dateticks = rss.dateticks,
-                                    description = rss.description,
-                                    insertdateticks = DateTime.Now.Ticks,
-                                    rssid = item._id,
-                                    title = rss.title,
-                                    url = rss.url,
-                                    userid = item.userid,
-                                    bycrawled=false
-                                });
+                            var res = await RssFetcher(item.url);
+                            if (res != null)
+                            {
+                                SuccessList.Add(item);
+                                foreach (var rss in res)
+                                    BaseContentList.Add(new Models.BaseContent.BaseContent()
+                                    {
+                                        dateticks = rss.dateticks,
+                                        description = rss.description,
+                                        insertdateticks = DateTime.Now.Ticks,
+                                        rssid = item._id,
+                                        title = rss.title,
+                                        url = rss.url,
+                                        userid = item.userid,
+                                        bycrawled = false
+                                    });
+                            }
                         }
                     }
                     //TODO: Resolve concarrency problem insert repeated if waite for preve task 

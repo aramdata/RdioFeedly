@@ -19,7 +19,7 @@ namespace Rdio.Models.ContentManager
         public long createdateticks { get; set; }
         public List<Models.Crawl.CrawlTemplate> template { get; set; }
         public long lastcrawldate { get; set; }
-
+        public bool activecrawl { get; set; }
 
     }
 }

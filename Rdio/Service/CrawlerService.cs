@@ -18,11 +18,11 @@ namespace Rdio.Service
 
         public async Task<bool> CrawlLinkManager()
         {
-            if (!IsInProccess())
+            if (!IsInProccess(CrawlLinkIsInProccessCacheKey))
             {
                 try
                 {
-                    SetScheduleInProccess(SchedulerStat.inProccess);
+                    SetScheduleInProccess(SchedulerStat.inProccess, CrawlLinkIsInProccessCacheKey);
                     Repository.ContentManagerRepository ContentManagerRepository = new Repository.ContentManagerRepository();
                     Repository.BaseContentRepository BaseContentRepository = new Repository.BaseContentRepository();
                     var SuccessList = new List<Models.ContentManager.Site>();
@@ -55,12 +55,12 @@ namespace Rdio.Service
                     var changeRes = await ContentManagerRepository.ChangeLastCarawlDateSite(SuccessList);
                     var AddToRedisRes = await BaseContentRepository.AddRssURlInRedis(BaseContentList);
 
-                    SetScheduleInProccess(SchedulerStat.idle);
+                    SetScheduleInProccess(SchedulerStat.idle, CrawlLinkIsInProccessCacheKey);
                     return true;
                 }
                 catch (Exception ex)
                 {
-                    SetScheduleInProccess(SchedulerStat.idle);
+                    SetScheduleInProccess(SchedulerStat.idle, CrawlLinkIsInProccessCacheKey);
                     return false;
                 }
             }
@@ -109,11 +109,11 @@ namespace Rdio.Service
 
         public async Task<bool> CrawlManager()
         {
-            if (!IsInProccess())
+            if (!IsInProccess(CrawlInProccessIsInProccessCacheKey))
             {
                 try
                 {
-                    SetScheduleInProccess(SchedulerStat.inProccess);
+                    SetScheduleInProccess(SchedulerStat.inProccess, CrawlInProccessIsInProccessCacheKey);
                     Repository.ContentManagerRepository ContentManagerRepository = new Repository.ContentManagerRepository();
                     Repository.BaseContentRepository BaseContentRepository = new Repository.BaseContentRepository();
                     var SuccessList = new List<Models.ContentManager.Rss>();
@@ -125,12 +125,12 @@ namespace Rdio.Service
                         var res = await Crawler(item);
                     }
                     
-                    SetScheduleInProccess(SchedulerStat.idle);
+                    SetScheduleInProccess(SchedulerStat.idle, CrawlInProccessIsInProccessCacheKey);
                     return true;
                 }
                 catch (Exception ex)
                 {
-                    SetScheduleInProccess(SchedulerStat.idle);
+                    SetScheduleInProccess(SchedulerStat.idle, CrawlInProccessIsInProccessCacheKey);
                     return false;
                 }
             }
@@ -215,17 +215,19 @@ namespace Rdio.Service
             
         }
 
-        string IsInProccessCacheKey = "CrawlInProccess";
+        string CrawlInProccessIsInProccessCacheKey = "CrawlInProccessIsInProccessCacheKey";
+        string CrawlLinkIsInProccessCacheKey = "CrawlLinkIsInProccessCacheKey";
+
         public enum SchedulerStat
         {
             inProccess = 0,
             idle = 1
         }
-        public bool IsInProccess()
+        public bool IsInProccess(string cachKey)
         {
             try
             {
-                var model = cacheService.GetCache(IsInProccessCacheKey);
+                var model = cacheService.GetCache(cachKey);
                 if (model == null)
                     return false;
                 else
@@ -237,9 +239,9 @@ namespace Rdio.Service
             }
         }
 
-        public void SetScheduleInProccess(SchedulerStat stat)
+        public void SetScheduleInProccess(SchedulerStat stat, string cachKey)
         {
-            cacheService.AddToCache(IsInProccessCacheKey, ((int)stat).ToString());
+            cacheService.AddToCache(cachKey, ((int)stat).ToString());
         }
     }
 }
