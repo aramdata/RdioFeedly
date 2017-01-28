@@ -387,7 +387,7 @@ namespace Rdio.Repository
             try
             {
                 //var _model = await NoSql.Instance.RunCommandAsync<BsonDocument>("{aggregate:'sites',pipeline:[{$match:{lastcrawldate:{$lt:" + DateTime.Now.Ticks + "}}},{$sort : {'_id' : -1 }},{$limit:" + count + "}]}");
-                var _model = await NoSql.Instance.RunCommandAsync<BsonDocument>("{aggregate:'sites',pipeline:[{$match:{activecrawl:"+true+"}},{$sort : {'_id' : -1 }},{$limit:" + count + "}]}");
+                var _model = await NoSql.Instance.RunCommandAsync<BsonDocument>("{aggregate:'sites',pipeline:[{$match:{activecrawl:true}},{$sort : {'_id' : -1 }},{$limit:" + count + "}]}");
 
                 if (_model.GetValue("result").AsBsonArray.Any())
                     foreach (var item in _model.GetValue("result").AsBsonArray)
