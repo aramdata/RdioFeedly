@@ -85,13 +85,13 @@ namespace Rdio.Service
                 var parser = new HtmlParser();
                 var document = parser.Parse(htmlContent);
 
-                var allLink = document.QuerySelectorAll("a").Where(q=>q.Attributes.Where(x=>x.Name=="href").Any(x=>x.Value.Contains(model.url)));
+                var allLink = document.QuerySelectorAll("a").Where(q=>q.Attributes.Where(x=>x.Name=="href").Any(x=>x.Value.Contains(model.url)) || q.Attributes.Where(x => x.Name == "href").Any(x=>x.Value.StartsWith("/")));
                 var res = new List<Models.BaseRssItem>();
 
                 foreach (var item in allLink)
                 {
                     string title = item.TextContent;
-                    string link = item.GetAttribute("href");
+                    string link =new Uri(uri, item.GetAttribute("href")).ToString();
                     string description = "";
                     var datetime = DateTime.Now;
                     if(!string.IsNullOrEmpty(title))
