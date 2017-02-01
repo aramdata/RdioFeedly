@@ -184,7 +184,7 @@ namespace Rdio.Service
                                     elementcontent = Util.Common.CleanHtmlContent(element.InnerHtml);
                                     break;
                                 case "src":
-                                    elementcontent = element.GetAttribute(item.type);
+                                    elementcontent = new Uri(uri, element.GetAttribute(item.type)).ToString();
                                     break;
                                 default:
                                     break;
