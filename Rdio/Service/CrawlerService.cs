@@ -53,7 +53,9 @@ namespace Rdio.Service
                     //TODO: Resolve concarrency problem insert repeated if waite for preve task 
                     var addRes = await BaseContentRepository.Add(BaseContentList);
                     var changeRes = await ContentManagerRepository.ChangeLastCarawlDateSite(SuccessList);
-                    var AddToRedisRes = await BaseContentRepository.AddRssURlInRedis(BaseContentList);
+                    
+                    // Cache Url on Is Repeated Url If not repeated ...
+                    //var AddToRedisRes = await BaseContentRepository.AddRssURlInRedis(BaseContentList);
 
                     SetScheduleInProccess(SchedulerStat.idle, CrawlLinkIsInProccessCacheKey);
                     return true;
@@ -94,7 +96,7 @@ namespace Rdio.Service
                     string link =new Uri(uri, item.GetAttribute("href")).ToString();
                     string description = "";
                     var datetime = DateTime.Now;
-                    if(!string.IsNullOrEmpty(title))
+                    if(!string.IsNullOrEmpty(title) && title.Length>1)
                         res.Add(new Models.BaseRssItem() { title = title, url = link, description = description, dateticks = datetime.Ticks });
                 }
                 return res;

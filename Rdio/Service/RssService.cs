@@ -52,7 +52,9 @@ namespace Rdio.Service
                     //TODO: Resolve concarrency problem insert repeated if waite for preve task 
                     var addRes = await BaseContentRepository.Add(BaseContentList);
                     var changeRes = await ContentManagerRepository.ChangeLastCarawlDateRss(SuccessList);
-                    var AddToRedisRes = await BaseContentRepository.AddRssURlInRedis(BaseContentList);
+
+                    // Cache Url on Is Repeated Url If not repeated ...
+                    //var AddToRedisRes = await BaseContentRepository.AddRssURlInRedis(BaseContentList);
 
                     SetScheduleInProccess(SchedulerStat.idle);
                     return true;
@@ -162,6 +164,11 @@ namespace Rdio.Service
                 var value = await db.StringGetAsync(Util.Common.GetMD5(url));
                 if (!string.IsNullOrWhiteSpace(value))
                     return true;
+                else
+                {
+                    var hashurl = Util.Common.GetMD5(url);
+                    var res = await db.StringSetAsync(hashurl, url);
+                }
                 return false;
             }
             catch (Exception ex)
