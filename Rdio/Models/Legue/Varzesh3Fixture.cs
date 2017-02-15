@@ -29,5 +29,20 @@ namespace Rdio.Models.Legue
         public string DayOfWeek { get; set; }
         public string JalaliDate { get; set; }
 
+
+        //Vollyball
+        public string Q11 { get; set; }
+        public string Q12 { get; set; }
+        public string Q13 { get; set; }
+        public string Q14 { get; set; }
+        public string Q15 { get; set; }
+        public string Q21 { get; set; }
+        public string Q22 { get; set; }
+        public string Q23 { get; set; }
+        public string Q24 { get; set; }
+        public string Q25 { get; set; }
+
+
+
     }
 }

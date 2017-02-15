@@ -102,5 +102,114 @@ namespace Rdio.Service
             return Util.Common.fromJSON<Models.Legue.Varzesh3LegueFixture>(htmlContent);
         }
 
+        public async Task<Models.Legue.Varzesh3Legue> GetVollybalLegue(int VollybalLegueId)
+        {
+            string Url = string.Empty;
+            switch (VollybalLegueId)
+            {
+                case (int)Rdio.Util.Configuration.VollybalLegue.Bartar:
+                    Url = "http://api.varzesh3.com/v0.2/leaguestat/widget/6/252";
+                    break;
+                case (int)Rdio.Util.Configuration.VollybalLegue.PlayOff:
+                    Url = "http://api.varzesh3.com/v0.2/leaguestat/widget/6/278";
+                    break;
+                default:
+                    break;
+            }
+
+            string htmlContent = "";
+            var uri = new Uri(Url);
+            using (var client = new HttpClient())
+            {
+                client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:50.0) Gecko/20100101 Firefox/50.0");
+                client.DefaultRequestHeaders.Add("Host", uri.Authority);
+                using (var r = await client.GetAsync(uri))
+                {
+                    htmlContent = await r.Content.ReadAsStringAsync();
+                }
+            }
+            return Util.Common.fromJSON<Models.Legue.Varzesh3Legue>(htmlContent);
+        }
+
+        public async Task<Models.Legue.Varzesh3LegueFixture> GetVollybalLegueFixture(int VollybalLegueId)
+        {
+            string Url = string.Empty;
+            switch (VollybalLegueId)
+            {
+                case (int)Rdio.Util.Configuration.VollybalLegue.Bartar:
+                    Url = "http://api.varzesh3.com/v0.2/leaguestat/widget/6/252";
+                    break;
+                case (int)Rdio.Util.Configuration.VollybalLegue.PlayOff:
+                    Url = "http://api.varzesh3.com/v0.2/leaguestat/widget/6/278";
+                    break;
+                default:
+                    break;
+            }
+
+            string htmlContent = "";
+            var uri = new Uri(Url);
+            using (var client = new HttpClient())
+            {
+                client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:50.0) Gecko/20100101 Firefox/50.0");
+                client.DefaultRequestHeaders.Add("Host", uri.Authority);
+                using (var r = await client.GetAsync(uri))
+                {
+                    htmlContent = await r.Content.ReadAsStringAsync();
+                }
+            }
+            return Util.Common.fromJSON<Models.Legue.Varzesh3LegueFixture>(htmlContent);
+        }
+
+        public async Task<Models.Legue.Varzesh3Legue> GetBasketbalLegue(int BasketbalLegueId)
+        {
+            string Url = string.Empty;
+            switch (BasketbalLegueId)
+            {
+                case (int)Rdio.Util.Configuration.BasketbalLegue.Bartar:
+                    Url = "http://api.varzesh3.com/v0.2/leaguestat/widget/10/258";
+                    break;
+                default:
+                    break;
+            }
+
+            string htmlContent = "";
+            var uri = new Uri(Url);
+            using (var client = new HttpClient())
+            {
+                client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:50.0) Gecko/20100101 Firefox/50.0");
+                client.DefaultRequestHeaders.Add("Host", uri.Authority);
+                using (var r = await client.GetAsync(uri))
+                {
+                    htmlContent = await r.Content.ReadAsStringAsync();
+                }
+            }
+            return Util.Common.fromJSON<Models.Legue.Varzesh3Legue>(htmlContent);
+        }
+        public async Task<Models.Legue.Varzesh3LegueFixture> GetBasketbalLegueFixture(int BasketbalLegueId)
+        {
+            string Url = string.Empty;
+            switch (BasketbalLegueId)
+            {
+                case (int)Rdio.Util.Configuration.BasketbalLegue.Bartar:
+                    Url = "http://api.varzesh3.com/v0.2/leaguestat/widget/10/258";
+                    break;
+                default:
+                    break;
+            }
+
+            string htmlContent = "";
+            var uri = new Uri(Url);
+            using (var client = new HttpClient())
+            {
+                client.DefaultRequestHeaders.Add("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64; rv:50.0) Gecko/20100101 Firefox/50.0");
+                client.DefaultRequestHeaders.Add("Host", uri.Authority);
+                using (var r = await client.GetAsync(uri))
+                {
+                    htmlContent = await r.Content.ReadAsStringAsync();
+                }
+            }
+            return Util.Common.fromJSON<Models.Legue.Varzesh3LegueFixture>(htmlContent);
+        }
+
     }
 }

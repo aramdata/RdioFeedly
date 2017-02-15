@@ -168,5 +168,145 @@ namespace Rdio.Api
                 };
             }
         }
+
+        [Route("api/UserBlog/GetVollybalLegue")]
+        public async Task<ServiceResult<Models.Legue.Varzesh3Legue>> GetVollybalLegue([FromUri]ViewModel.UserBlog.GetFootbalLegueVM model)
+        {
+            try
+            {
+                if (!string.IsNullOrWhiteSpace(model.FootbalLegueId))
+                {
+                    var res = await LequeService.GetVollybalLegue(int.Parse(model.FootbalLegueId));
+                    return new ServiceResult<Models.Legue.Varzesh3Legue>
+                    {
+                        Data = new List<Models.Legue.Varzesh3Legue> { res },
+                        ServiceResultStatus = (int)Rdio.Util.Common.ServiceResultStatus.OK,
+                        ServiceResultMassage = Util.Common.ServiceResultMessage.OKMessage.ToString()
+                    };
+                }
+                else
+                    return new ServiceResult<Models.Legue.Varzesh3Legue>
+                    {
+                        Data = null,
+                        ServiceResultStatus = (int)Rdio.Util.Common.ServiceResultStatus.Error,
+                        ServiceResultMassage = ""
+                    };
+
+            }
+            catch (Exception ex)
+            {
+                return new ServiceResult<Models.Legue.Varzesh3Legue>
+                {
+                    Data = null,
+                    ServiceResultStatus = (int)Rdio.Util.Common.ServiceResultStatus.Error,
+                    ServiceResultMassage = ex.GetBaseException().Message
+                };
+            }
+        }
+        [Route("api/UserBlog/GetVollybalLegueFixture")]
+        public async Task<ServiceResult<Models.Legue.Varzesh3LegueFixture>> GetVollybalLegueFixture([FromUri]ViewModel.UserBlog.GetFootbalLegueVM model)
+        {
+            try
+            {
+                if (!string.IsNullOrWhiteSpace(model.FootbalLegueId))
+                {
+                    var res = await LequeService.GetVollybalLegueFixture(int.Parse(model.FootbalLegueId));
+                    return new ServiceResult<Models.Legue.Varzesh3LegueFixture>
+                    {
+                        Data = new List<Models.Legue.Varzesh3LegueFixture> { res },
+                        ServiceResultStatus = (int)Rdio.Util.Common.ServiceResultStatus.OK,
+                        ServiceResultMassage = Util.Common.ServiceResultMessage.OKMessage.ToString()
+                    };
+                }
+                else
+                    return new ServiceResult<Models.Legue.Varzesh3LegueFixture>
+                    {
+                        Data = null,
+                        ServiceResultStatus = (int)Rdio.Util.Common.ServiceResultStatus.Error,
+                        ServiceResultMassage = ""
+                    };
+
+            }
+            catch (Exception ex)
+            {
+                return new ServiceResult<Models.Legue.Varzesh3LegueFixture>
+                {
+                    Data = null,
+                    ServiceResultStatus = (int)Rdio.Util.Common.ServiceResultStatus.Error,
+                    ServiceResultMassage = ex.GetBaseException().Message
+                };
+            }
+        }
+
+
+        [Route("api/UserBlog/GetBasketbalLegue")]
+        public async Task<ServiceResult<Models.Legue.Varzesh3Legue>> GetBasketbalLegue([FromUri]ViewModel.UserBlog.GetFootbalLegueVM model)
+        {
+            try
+            {
+                if (!string.IsNullOrWhiteSpace(model.FootbalLegueId))
+                {
+                    var res = await LequeService.GetBasketbalLegue(int.Parse(model.FootbalLegueId));
+                    return new ServiceResult<Models.Legue.Varzesh3Legue>
+                    {
+                        Data = new List<Models.Legue.Varzesh3Legue> { res },
+                        ServiceResultStatus = (int)Rdio.Util.Common.ServiceResultStatus.OK,
+                        ServiceResultMassage = Util.Common.ServiceResultMessage.OKMessage.ToString()
+                    };
+                }
+                else
+                    return new ServiceResult<Models.Legue.Varzesh3Legue>
+                    {
+                        Data = null,
+                        ServiceResultStatus = (int)Rdio.Util.Common.ServiceResultStatus.Error,
+                        ServiceResultMassage = ""
+                    };
+
+            }
+            catch (Exception ex)
+            {
+                return new ServiceResult<Models.Legue.Varzesh3Legue>
+                {
+                    Data = null,
+                    ServiceResultStatus = (int)Rdio.Util.Common.ServiceResultStatus.Error,
+                    ServiceResultMassage = ex.GetBaseException().Message
+                };
+            }
+        }
+
+        [Route("api/UserBlog/GetBasketbalLegueFixture")]
+        public async Task<ServiceResult<Models.Legue.Varzesh3LegueFixture>> GetBasketbalLegueFixture([FromUri]ViewModel.UserBlog.GetFootbalLegueVM model)
+        {
+            try
+            {
+                if (!string.IsNullOrWhiteSpace(model.FootbalLegueId))
+                {
+                    var res = await LequeService.GetBasketbalLegueFixture(int.Parse(model.FootbalLegueId));
+                    return new ServiceResult<Models.Legue.Varzesh3LegueFixture>
+                    {
+                        Data = new List<Models.Legue.Varzesh3LegueFixture> { res },
+                        ServiceResultStatus = (int)Rdio.Util.Common.ServiceResultStatus.OK,
+                        ServiceResultMassage = Util.Common.ServiceResultMessage.OKMessage.ToString()
+                    };
+                }
+                else
+                    return new ServiceResult<Models.Legue.Varzesh3LegueFixture>
+                    {
+                        Data = null,
+                        ServiceResultStatus = (int)Rdio.Util.Common.ServiceResultStatus.Error,
+                        ServiceResultMassage = ""
+                    };
+
+            }
+            catch (Exception ex)
+            {
+                return new ServiceResult<Models.Legue.Varzesh3LegueFixture>
+                {
+                    Data = null,
+                    ServiceResultStatus = (int)Rdio.Util.Common.ServiceResultStatus.Error,
+                    ServiceResultMassage = ex.GetBaseException().Message
+                };
+            }
+        }
     }
 }
